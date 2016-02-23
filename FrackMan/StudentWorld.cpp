@@ -52,8 +52,11 @@ int StudentWorld::init()
 	addActor(new FrackMan(this, 30, 60));
 	for (int i = 0; i < B; i++)
 	{
-		int x = randInt(0, 60);
-		int y = randInt(20, 56);
+		int x, y;
+		do {
+			x = randInt(0, 60);
+			y = randInt(20, 56);
+		} while (withinMineShaft(y, x));
 		clearDirt(x, y);
 		Boulder* boldy = new Boulder(this, x, y);
 		addActor(boldy);

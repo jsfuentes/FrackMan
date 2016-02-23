@@ -1,6 +1,8 @@
 #include "StudentWorld.h"
 #include "Actor.h"
 #include <string>
+#include <random>
+#include <algorithm>
 using namespace std;
 
 GameWorld* createStudentWorld(string assetDir)
@@ -31,6 +33,9 @@ StudentWorld::~StudentWorld()
 
 int StudentWorld::init()
 {
+	int B = min((static_cast<int>(getLevel()) / 2) + 2, 6); //getLevel() returns unsigned int(could produce error for a HUGE level
+	int G = max(5 - (static_cast<int>(getLevel()) / 2), 2);
+	int L = min(2 + static_cast<int>(getLevel()), 20);
 	for (int column = 0; column < 64; column++)
 	{
 		for (int row = 0; row < 64; row++)
@@ -46,7 +51,13 @@ int StudentWorld::init()
 		}
 	}
 	addActor(new FrackMan(this, 30, 60));
-	addActor(new Boulder(this, 10, 10));
+	for (int i = 0; i < B; i++)
+	{
+		int x = randInt(0, 60);
+		int y = randInt(20, 56);
+		clearDirt(x, y);
+		Boulder* boldy = new Boulder(this, x, y);
+	}
 	return GWSTATUS_CONTINUE_GAME;
 }
 
@@ -99,5 +110,18 @@ void StudentWorld::cleanUp()
 		m_Actors.pop_back();
 	}
 	
+}
+
+///////////////////////////
+//UTILITY FUNCTIONS
+//////////////////////////
+int randInt(int min, int max) //copy pasted from project 1 utilities
+{
+	if (max < min)
+		swap(max, min);
+	static random_device rd;
+	static mt19937 generator(rd());
+	uniform_int_distribution<> distro(min, max);
+	return distro(generator);
 }
 // Students:  Add code to this file (if you wish), StudentWorld.h, Actor.h and Actor.cpp

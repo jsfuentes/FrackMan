@@ -5,9 +5,12 @@
 #include "GameConstants.h"
 #include <string>
 #include <vector>
+
 class Dirt;
 class FrackMan;
 class Object;
+
+int randInt(int min, int max); //at bottom of StudentWorld
 // Students:  Add code to this file, StudentWorld.cpp, Actor.h, and Actor.cpp
 
 class StudentWorld : public GameWorld

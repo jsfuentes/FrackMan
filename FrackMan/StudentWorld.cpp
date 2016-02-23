@@ -49,25 +49,32 @@ int StudentWorld::init()
 			m_Dirt[column][row] = new Dirt(this, column, row);
 		}
 	}
-	addActor(new FrackMan(this, 30, 60));
-	for (int i = 0; i < B; i++)
+	addActor("FrackMan");
+	addActor("Boulder", B);
+	return GWSTATUS_CONTINUE_GAME;
+}
+
+void StudentWorld::addActor(string objectName, int number)
+{
+	if (objectName == "FrackMan")
+	{
+		m_Actors.push_back(new FrackMan(this, 30, 60));
+		return;
+	}
+	for (int i = 0; i < number; i++)
 	{
 		int x, y;
 		do {
 			x = randInt(0, 60);
 			y = randInt(20, 56);
 		} while (withinMineShaft(y, x));
-		clearDirt(x, y);
-		Boulder* boldy = new Boulder(this, x, y);
-		addActor(boldy);
+		if (objectName == "Boulder")
+		{
+			clearDirt(x, y);
+			Object* boldy = new Boulder(this, x, y);
+			m_Actors.push_back(boldy);
+		}
 	}
-	return GWSTATUS_CONTINUE_GAME;
-}
-
-void StudentWorld::addActor(Object* a)
-{
-	if (a != nullptr)
-		m_Actors.push_back(a);
 }
 
 void StudentWorld::clearDirt(int x, int y)
@@ -112,7 +119,6 @@ void StudentWorld::cleanUp()
 		delete m_Actors.back();
 		m_Actors.pop_back();
 	}
-	
 }
 
 ///////////////////////////

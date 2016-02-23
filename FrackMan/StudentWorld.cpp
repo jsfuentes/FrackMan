@@ -40,9 +40,8 @@ int StudentWorld::init()
 	{
 		for (int row = 0; row < 64; row++)
 		{
-			if (row >= 4 && row <= 59 && column >= 30 && column <= 33 || row >= 60)
+			if (withinMineShaft(row, column) || row >= 60)
 				//the or is to fill the unused spaces with nullptrs
-				//the intial ands are for the mine shaft
 			{
 				m_Dirt[column][row] = nullptr;
 				continue;
@@ -57,6 +56,7 @@ int StudentWorld::init()
 		int y = randInt(20, 56);
 		clearDirt(x, y);
 		Boulder* boldy = new Boulder(this, x, y);
+		addActor(boldy);
 	}
 	return GWSTATUS_CONTINUE_GAME;
 }
@@ -115,6 +115,14 @@ void StudentWorld::cleanUp()
 ///////////////////////////
 //UTILITY FUNCTIONS
 //////////////////////////
+bool StudentWorld::withinMineShaft(int row, int column)
+{
+	if (row >= 4 && row <= 59 && column >= 30 && column <= 33)
+		return true;
+	else
+		return false;
+}
+
 int randInt(int min, int max) //copy pasted from project 1 utilities
 {
 	if (max < min)

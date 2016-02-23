@@ -9,9 +9,36 @@ Agent::Agent(StudentWorld* world, int startX, int startY, Direction startDir,
 {}
 
 Boulder::Boulder(StudentWorld* world, int startX, int startY): Object(world, IID_BOULDER, 
-	startX, startY, down, 1.0, 1)
+	startX, startY, down, 1.0, 1), delayCounter(0), isStable(true)
 {
 	setVisible(true);
+}
+
+void Boulder::doSomething() 
+{
+	if (isStable)
+	{
+		isStable = isDirtBelow();
+	}
+	else
+	{
+		if (delayCounter++ > 29) //delayCounter <30 && not stable means falling
+		{
+			if(delayCounter == 31) //just started falling(because iterators delayCounter before this(in if)
+				getWorld()->playSound(SOUND_FALLING_ROCK);
+			if(getWorld()->canActorMoveTo(this, getX(), getY() -1) && !isDirtBelow())
+				moveTo(getX(), getY() - 1);
+		}
+	}
+}
+
+bool Boulder::isDirtBelow()
+{
+	bool isDirtBelow = false;
+	for (int i = 0; i < 4; i++) //for all 4 spaces below boulder
+		if (getWorld()->isDirtAt(getX() + i, getY() - 1))
+			isDirtBelow = true;
+	return isDirtBelow;
 }
 
 Dirt::Dirt(StudentWorld* world, int startX, int startY) : Object(world, IID_DIRT, startX, startY, right, .25, 3)

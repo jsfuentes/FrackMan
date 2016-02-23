@@ -36,22 +36,22 @@ int StudentWorld::init()
 	int B = min((static_cast<int>(getLevel()) / 2) + 2, 6); //getLevel() returns unsigned int(could produce error for a HUGE level
 	int G = max(5 - (static_cast<int>(getLevel()) / 2), 2);
 	int L = min(2 + static_cast<int>(getLevel()), 20);
-for (int column = 0; column < 64; column++)
-{
-	for (int row = 0; row < 64; row++)
+	for (int column = 0; column < 64; column++)
 	{
-		if (withinMineShaft(row, column) || row >= 60)
-			//the or is to fill the unused spaces with nullptrs
+		for (int row = 0; row < 64; row++)
 		{
-			m_Dirt[column][row] = nullptr;
-			continue;
+			if (withinMineShaft(row, column) || row >= 60)
+			//the or is to fill the unused spaces with nullptrs
+			{
+				m_Dirt[column][row] = nullptr;
+				continue;
+			}
+			m_Dirt[column][row] = new Dirt(this, column, row);
 		}
-		m_Dirt[column][row] = new Dirt(this, column, row);
 	}
-}
-addActor("FrackMan");
-addActor("Boulder", 15);
-return GWSTATUS_CONTINUE_GAME;
+	addActor("FrackMan");
+	addActor("Boulder", 15);
+	return GWSTATUS_CONTINUE_GAME;
 }
 
 void StudentWorld::addActor(string objectName, int number)
@@ -119,6 +119,14 @@ bool StudentWorld::canActorMoveTo(Object* a, int x, int y)
 	}
 }
 
+bool StudentWorld::isDirtAt(int x, int y)
+{
+	if (m_Dirt[x][y] != nullptr)
+		return true;
+	else
+		return false;
+}
+
 void StudentWorld::cleanUp()
 {
 	for (int column = 0; column < 64; column++)
@@ -163,8 +171,8 @@ bool StudentWorld::closeToObjects(int x, int y)
 	bool isTooClose = false;
 	for (vector<Object*>::iterator it = m_Actors.begin(); it != m_Actors.end(); it++)
 	{
-		if ((*it)->canDigThroughDirt()) //checks to see if its Frackman as only he return true here and there are no distance requirements from the man
-			continue;
+		//if ((*it)->canDigThroughDirt()) //checks to see if its Frackman as only he return true here and there are no distance requirements from the man
+		//	continue;
 		int dX = x - (*it)->getX();
 		int dY = y - (*it)->getY();
 		double distance = sqrt(pow(dX, 2) + pow(dY, 2));

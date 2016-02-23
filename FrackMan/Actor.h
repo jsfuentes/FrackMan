@@ -21,9 +21,12 @@ class Boulder : public Object
 {
 public:
 	Boulder(StudentWorld* world, int startX, int startY);
-	void doSomething() {};
+	void doSomething();
 	bool canActorsPassThroughMe() const { return false; };
 private:
+	bool isDirtBelow();
+	bool isStable;
+	int delayCounter;
 };
 
 class Dirt : public Object

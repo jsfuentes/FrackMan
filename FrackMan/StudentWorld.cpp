@@ -46,6 +46,7 @@ int StudentWorld::init()
 		}
 	}
 	addActor(new FrackMan(this, 30, 60));
+	addActor(new Boulder(this, 10, 10));
 	return GWSTATUS_CONTINUE_GAME;
 }
 

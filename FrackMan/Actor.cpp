@@ -8,6 +8,12 @@ Agent::Agent(StudentWorld* world, int startX, int startY, Direction startDir,
 	int imageID, unsigned int hitPoints) : Object(world, imageID, startX, startY, startDir, 1.0, 0), m_HP(hitPoints)
 {}
 
+Boulder::Boulder(StudentWorld* world, int startX, int startY): Object(world, IID_BOULDER, 
+	startX, startY, down, 1.0, 1)
+{
+	setVisible(true);
+}
+
 Dirt::Dirt(StudentWorld* world, int startX, int startY) : Object(world, IID_DIRT, startX, startY, right, .25, 3)
 {
 	setVisible(true);

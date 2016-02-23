@@ -50,7 +50,7 @@ int StudentWorld::init()
 		}
 	}
 	addActor("FrackMan");
-	addActor("Boulder", B);
+	addActor("Boulder", 15);
 	return GWSTATUS_CONTINUE_GAME;
 }
 
@@ -67,7 +67,8 @@ void StudentWorld::addActor(string objectName, int number)
 		do {
 			x = randInt(0, 60);
 			y = randInt(20, 56);
-		} while (withinMineShaft(y, x) && closeToObjects(x, y));
+		} while (withinMineShaft(y, x) || withinMineShaft(y, x+4) || closeToObjects(x, y)); 
+		//calls within MineShaft twice, once for the bottom left edge and again for the bottom right edge
 		if (objectName == "Boulder")
 		{
 			clearDirt(x, y);
@@ -129,10 +130,13 @@ bool StudentWorld::closeToObjects(int x, int y)
 	bool isTooClose = false;
 	for (vector<Object*>::iterator it = m_Actors.begin(); it != m_Actors.end(); it++)
 	{
+		if ((*it)->canDigThroughDirt()) //checks to see if its Frackman as only he return true here and there are no distance requirements from the man
+			continue;
 		int dX = x - (*it)->getX();
 		int dY = y - (*it)->getY();
-		double distance = sqrt(dX^dX + dY^dY);
-		isTooClose = ((distance <= 6) ? true : false);
+		double distance = sqrt(pow(dX, 2) + pow(dY, 2));
+		if (distance <= 6)
+			isTooClose = true;
 	}
 	return isTooClose;
 }

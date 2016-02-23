@@ -67,7 +67,7 @@ void StudentWorld::addActor(string objectName, int number)
 		do {
 			x = randInt(0, 60);
 			y = randInt(20, 56);
-		} while (withinMineShaft(y, x));
+		} while (withinMineShaft(y, x) && closeToObjects(x, y));
 		if (objectName == "Boulder")
 		{
 			clearDirt(x, y);
@@ -124,6 +124,19 @@ void StudentWorld::cleanUp()
 ///////////////////////////
 //UTILITY FUNCTIONS
 //////////////////////////
+bool StudentWorld::closeToObjects(int x, int y)
+{
+	bool isTooClose = false;
+	for (vector<Object*>::iterator it = m_Actors.begin(); it != m_Actors.end(); it++)
+	{
+		int dX = x - (*it)->getX();
+		int dY = y - (*it)->getY();
+		double distance = sqrt(dX^dX + dY^dY);
+		isTooClose = ((distance <= 6) ? true : false);
+	}
+	return isTooClose;
+}
+
 bool StudentWorld::withinMineShaft(int row, int column)
 {
 	if (row >= 4 && row <= 59 && column >= 30 && column <= 33)

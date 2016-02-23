@@ -36,22 +36,22 @@ int StudentWorld::init()
 	int B = min((static_cast<int>(getLevel()) / 2) + 2, 6); //getLevel() returns unsigned int(could produce error for a HUGE level
 	int G = max(5 - (static_cast<int>(getLevel()) / 2), 2);
 	int L = min(2 + static_cast<int>(getLevel()), 20);
-	for (int column = 0; column < 64; column++)
+for (int column = 0; column < 64; column++)
+{
+	for (int row = 0; row < 64; row++)
 	{
-		for (int row = 0; row < 64; row++)
+		if (withinMineShaft(row, column) || row >= 60)
+			//the or is to fill the unused spaces with nullptrs
 		{
-			if (withinMineShaft(row, column) || row >= 60)
-				//the or is to fill the unused spaces with nullptrs
-			{
-				m_Dirt[column][row] = nullptr;
-				continue;
-			}
-			m_Dirt[column][row] = new Dirt(this, column, row);
+			m_Dirt[column][row] = nullptr;
+			continue;
 		}
+		m_Dirt[column][row] = new Dirt(this, column, row);
 	}
-	addActor("FrackMan");
-	addActor("Boulder", 15);
-	return GWSTATUS_CONTINUE_GAME;
+}
+addActor("FrackMan");
+addActor("Boulder", 15);
+return GWSTATUS_CONTINUE_GAME;
 }
 
 void StudentWorld::addActor(string objectName, int number)
@@ -67,7 +67,7 @@ void StudentWorld::addActor(string objectName, int number)
 		do {
 			x = randInt(0, 60);
 			y = randInt(20, 56);
-		} while (withinMineShaft(y, x) || withinMineShaft(y, x+4) || closeToObjects(x, y)); 
+		} while (withinMineShaft(y, x) || withinMineShaft(y, x + 4) || closeToObjects(x, y));
 		//calls within MineShaft twice, once for the bottom left edge and again for the bottom right edge
 		if (objectName == "Boulder")
 		{
@@ -123,8 +123,27 @@ void StudentWorld::cleanUp()
 }
 
 ///////////////////////////
-//UTILITY FUNCTIONS
+//UTILITY FUNCTIONS (private or other)
 //////////////////////////
+Object* StudentWorld::objectCollided(Object* actor, int x, int y) //returns object if overlapping or null if not
+{
+	if (actor == nullptr)
+		return nullptr;
+	for (vector<Object*>::iterator it = m_Actors.begin(); it != m_Actors.end(); it++)
+	{
+		if (*it != actor) //if they arent the same object
+		{
+			int tempX = (*it)->getX();
+			int tempY = (*it)->getY();
+			if ((x - tempX) < 4 && (y - tempY) < 4)
+			{
+				return *it;
+			}
+		}
+	}
+	return nullptr;
+}
+
 bool StudentWorld::closeToObjects(int x, int y)
 {
 	bool isTooClose = false;

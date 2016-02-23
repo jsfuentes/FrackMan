@@ -25,6 +25,7 @@ public:
 	void clearDirt(int x, int y); //given the actors coordinates delete all dirt in 4x4
 
 private:
+	Object* objectCollided(Object* actor, int x, int y);
 	bool withinMineShaft(int x, int y);
 	bool closeToObjects(int x, int y);
 	Dirt* m_Dirt[64][64];

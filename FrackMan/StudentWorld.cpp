@@ -105,6 +105,20 @@ int StudentWorld::move()
 	return GWSTATUS_CONTINUE_GAME;
 }
 
+bool StudentWorld::canActorMoveTo(Object* a, int x, int y)
+{
+	if (x > 60 || x < 0 || y > 60 || y < 0) //within bounds
+			return false;
+	else
+	{
+		Object* intersectingA = objectCollided(a, x, y);
+		if (intersectingA == nullptr)
+			return true;
+		else
+			return intersectingA->canActorsPassThroughMe();
+	}
+}
+
 void StudentWorld::cleanUp()
 {
 	for (int column = 0; column < 64; column++)
@@ -125,7 +139,7 @@ void StudentWorld::cleanUp()
 ///////////////////////////
 //UTILITY FUNCTIONS (private or other)
 //////////////////////////
-Object* StudentWorld::objectCollided(Object* actor, int x, int y) //returns object if overlapping or null if not
+Object* StudentWorld::objectCollided(Object* actor, int x, int y)//returns object if overlapping or null if not
 {
 	if (actor == nullptr)
 		return nullptr;
@@ -133,9 +147,9 @@ Object* StudentWorld::objectCollided(Object* actor, int x, int y) //returns obje
 	{
 		if (*it != actor) //if they arent the same object
 		{
-			int tempX = (*it)->getX();
-			int tempY = (*it)->getY();
-			if ((x - tempX) < 4 && (y - tempY) < 4)
+			int dX = abs(x - (*it)->getX());
+			int dY = abs(y - (*it)->getY());
+			if (dX < 4 && dY < 4)
 			{
 				return *it;
 			}

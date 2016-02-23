@@ -22,6 +22,7 @@ public:
 	virtual int move();
 	virtual void cleanUp();
 	void addActor(std::string objectName, int number = 1);
+	bool canActorMoveTo(Object* a, int x, int y);
 	void clearDirt(int x, int y); //given the actors coordinates delete all dirt in 4x4
 
 private:

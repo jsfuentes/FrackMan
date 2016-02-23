@@ -33,56 +33,35 @@ void FrackMan::doSomething()
 		{
 		case KEY_PRESS_UP:
 			if (getDirection() != up)
-			{
 				setDirection(up);
-				break; //if not facing dir, wont move immediately 
-			}
-			if (getY() + 1 > 60)
-			{
+			else if (getWorld()->canActorMoveTo(this, getX(), getY() + 1))
+				moveTo(getX(), getY() + 1);
+			else
 				moveTo(getX(), getY());
-				break;
-
-			}
-			moveTo(getX(), getY() + 1);
 			break;
 		case KEY_PRESS_RIGHT:
 			if (getDirection() != right)
-			{
 				setDirection(right);
-				break;
-			}
-			if (getX() + 1 > 60)
-			{
+			else if (getWorld()->canActorMoveTo(this, getX() + 1, getY()))
+				moveTo(getX() + 1, getY());
+			else
 				moveTo(getX(), getY());
-				break;
-			}
-			moveTo(getX() + 1, getY());
 			break;
 		case KEY_PRESS_LEFT:
 			if (getDirection() != left)
-			{
 				setDirection(left);
-				break;
-			}
-			if (getX() - 1 < 0)
-			{
+			else if (getWorld()->canActorMoveTo(this, getX() - 1, getY()))
+				moveTo(getX() - 1, getY());
+			else
 				moveTo(getX(), getY());
-				break;
-			}
-			moveTo(getX() - 1, getY());
 			break;
 		case KEY_PRESS_DOWN:
 			if (getDirection() != down)
-			{
 				setDirection(down);
-				break;
-			}
-			if (getY() - 1 < 0)
-			{
+			else if (getWorld()->canActorMoveTo(this, getX(), getY() - 1))
+				moveTo(getX(), getY() - 1);
+			else
 				moveTo(getX(), getY());
-				break;
-			}
-			moveTo(getX(), getY() - 1);
 			break;
 		case KEY_PRESS_ESCAPE:
 		case KEY_PRESS_SPACE:

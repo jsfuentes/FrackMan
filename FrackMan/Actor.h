@@ -10,6 +10,7 @@ public:
 	Object(StudentWorld* world, int imageID, int startX, int startY, Direction dir, double size, unsigned int depth);
 	virtual ~Object() {};
 	virtual void doSomething() = 0;
+	virtual bool canDigThroughDirt() const = 0;
 	StudentWorld* getWorld() { return m_world; };
 private:
 	StudentWorld* m_world;
@@ -21,6 +22,7 @@ public:
 	Dirt(StudentWorld* world, int startX, int startY); //default deconstructor works but 
 	~Dirt() {};
 	void doSomething() {};
+	bool canDigThroughDirt() const { return false; };
 private:
 };
 
@@ -39,6 +41,7 @@ public:
 	FrackMan(StudentWorld* world, int startX, int startY); //default deconstructor is adequete but
 	~FrackMan() {};
 	void doSomething();
+	bool canDigThroughDirt() const{ return true; };
 private:
 
 };

@@ -22,9 +22,13 @@ StudentWorld::~StudentWorld()
 			m_Dirt[column][row] = nullptr;
 		}
 	}
-	delete m_FrackMan;
-	m_FrackMan = nullptr;
+	while (!m_Actors.empty())
+	{
+		delete m_Actors.back();
+		m_Actors.pop_back();
+	}
 }
+
 int StudentWorld::init()
 {
 	for (int column = 0; column < 64; column++)
@@ -41,23 +45,38 @@ int StudentWorld::init()
 			m_Dirt[column][row] = new Dirt(this, column, row);
 		}
 	}
-	m_FrackMan = new FrackMan(this, 30, 60);
+	addActor(new FrackMan(this, 30, 60));
 	return GWSTATUS_CONTINUE_GAME;
+}
+
+void StudentWorld::addActor(Object* a)
+{
+	if (a != nullptr)
+		m_Actors.push_back(a);
+}
+
+void StudentWorld::clearDirt(int x, int y)
+{
+	for (int i = x; i < x + 4; i++)
+	{
+		for (int j = y; j < y + 4; j++)
+		{
+			delete m_Dirt[i][j];
+			m_Dirt[i][j] = nullptr;
+		}
+	}
 }
 
 int StudentWorld::move()
 {
 	// decLives();
 	// return GWSTATUS_PLAYER_DIED;
-	m_FrackMan->doSomething();
-	int manX = m_FrackMan->getX();
-	int manY = m_FrackMan->getY();
-	for (int i = manX; i < manX + 4; i++)
+	for (vector<Object*>::iterator it = m_Actors.begin(); it != m_Actors.end(); it++)
 	{
-		for (int j = manY; j < manY + 4; j++)
+		(*it)->doSomething();
+		if ((*it)->canDigThroughDirt())
 		{
-			delete m_Dirt[i][j];
-			m_Dirt[i][j] = nullptr;
+			clearDirt((*it)->getX(), (*it)->getY());
 		}
 	}
 	return GWSTATUS_CONTINUE_GAME;
@@ -73,7 +92,11 @@ void StudentWorld::cleanUp()
 			m_Dirt[column][row] = nullptr;
 		}
 	}
-	delete m_FrackMan;
-	m_FrackMan = nullptr;
+	while (!m_Actors.empty())
+	{
+		delete m_Actors.back();
+		m_Actors.pop_back();
+	}
+	
 }
 // Students:  Add code to this file (if you wish), StudentWorld.h, Actor.h and Actor.cpp

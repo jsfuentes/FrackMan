@@ -35,6 +35,7 @@ private:
 	bool closeToObjects(int x, int y);
 	Dirt* m_Dirt[64][64];
 	std::vector <Object*> m_Actors;
+	int m_BarrelsLeft;
 };
 
 #endif // STUDENTWORLD_H_

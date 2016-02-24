@@ -38,7 +38,7 @@ int StudentWorld::init()
 {
 	int B = min((static_cast<int>(getLevel()) / 2) + 2, 6); //getLevel() returns unsigned int(could produce error for a HUGE level
 	int G = max(5 - (static_cast<int>(getLevel()) / 2), 2);
-	int L = min(2 + static_cast<int>(getLevel()), 20);
+	m_BarrelsLeft = min(2 + static_cast<int>(getLevel()), 20);
 	for (int column = 0; column < 64; column++)
 	{
 		for (int row = 0; row < 64; row++)
@@ -54,7 +54,7 @@ int StudentWorld::init()
 	}
 	addActor(FrackMan_); //FrackMan is in array first so doesSomething first
 	addActor(Boulder_, B);
-	addActor(Oil_, L);
+	addActor(Oil_, m_BarrelsLeft);
 	return GWSTATUS_CONTINUE_GAME;
 }
 
@@ -107,17 +107,28 @@ int StudentWorld::move()
 		}
 	}
 	vector<Object*>::iterator it = m_Actors.begin(); 
-	while(it != m_Actors.end())//deletion
+	while(it != m_Actors.end()) //deletion
 	{
 		if (!(*it)->isAlive())
 		{
+			if ((*it)->needsToBePickedUpToFinishLevel())
+			{
+				cout << "Before: " << m_BarrelsLeft--;
+				cout << "   After: " << m_BarrelsLeft << endl;
+			}
 			delete (*it);
 			it = m_Actors.erase(it);
 		}
 		else
 			it++;
 	}
-	return GWSTATUS_CONTINUE_GAME;
+	if(m_BarrelsLeft == 0)
+	{ 
+		playSound(SOUND_FINISHED_LEVEL);
+		return GWSTATUS_FINISHED_LEVEL;
+	}
+	else
+		return GWSTATUS_CONTINUE_GAME;
 }
 
 void StudentWorld::cleanUp()

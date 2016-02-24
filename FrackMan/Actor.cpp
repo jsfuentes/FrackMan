@@ -9,9 +9,9 @@ Agent::Agent(StudentWorld* world, int startX, int startY, Direction startDir,
 	, m_HP(hitPoints) {}
 
 ActivatingObject::ActivatingObject(StudentWorld* world, int startX, int startY, int imageID, 
-	int soundToPlay, bool activateOnPlayer, bool activateOnProtester, bool initallyActive) :
+	int soundToPlay, bool actOnPlayer, bool actOnProtester, bool initallyActive, int ptsWhenAct) : 
 	Object(world, imageID, startX, startY, right, 1.0, 2), m_soundToPlay(soundToPlay), 
-	m_activateOnPlayer(activateOnPlayer), m_activateOnProtestor(activateOnProtester) {}
+	m_actOnPlayer(actOnPlayer), m_actOnProtestor(actOnProtester), m_ptsWhenAct(ptsWhenAct) {}
 
 void ActivatingObject::playSound() 
 { 
@@ -22,12 +22,13 @@ void ActivatingObject::doSomething()
 {
 	if (!isAlive())
 		return;
-	if (m_activateOnPlayer)
+	if (m_actOnPlayer)
 	{
 		Object* MrFrack = getWorld()->findNearbyFrackMan(this, 3);
 		if (MrFrack != nullptr)
 		{
 			activate();
+			getWorld()->increaseScore(m_ptsWhenAct);
 			playSound();
 			kill();
 		}
@@ -36,27 +37,20 @@ void ActivatingObject::doSomething()
 
 GoldNugget::GoldNugget(StudentWorld* world, int startX, int startY, bool temporary):ActivatingObject(
 	world, startX, startY, IID_GOLD, temporary? SOUND_PROTESTER_FOUND_GOLD: SOUND_GOT_GOODIE, 
-	!temporary, temporary, temporary)
+	!temporary, temporary, temporary, temporary ? 25 : 10)
 {
 	if (temporary)
 		setVisible(true);
 }
 
 void GoldNugget::activate() 
-{
-	if (activatesOnPlayer())
-		getWorld()->increaseScore(10);
-	else
-		getWorld()->increaseScore(25);
-}
+{}
 
 OilBarrel::OilBarrel(StudentWorld* world, int startX, int startY) : ActivatingObject(world,
-	startX, startY, IID_BARREL, SOUND_FOUND_OIL, true, false, false) {}
+	startX, startY, IID_BARREL, SOUND_FOUND_OIL, true, false, false, 1000) {}
 
 void OilBarrel::activate()
-{
-	getWorld()->increaseScore(1000);
-}
+{}
 
 Boulder::Boulder(StudentWorld* world, int startX, int startY): Object(world, IID_BOULDER, 
 	startX, startY, down, 1.0, 1), delayCounter(0), isStable(true)

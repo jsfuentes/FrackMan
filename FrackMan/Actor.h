@@ -47,22 +47,30 @@ class ActivatingObject : public Object
 public:
 	ActivatingObject(StudentWorld* world, int startX, int startY, int imageID,
 		int soundToPlay, bool activateOnPlayer, bool activateOnProtester, bool initallyActive);
-	~ActivatingObject();
-	virtual void doSomething() = 0;
-
+	void playSound();
+	virtual void doSomething(); //general actions to take(look for Frackman or Protestor)
+	virtual void activate() = 0; //specific actions to take
 	// Set number of ticks until this object dies
 	void setTicksToLive() {};
 private:
 	int m_soundToPlay;
+	int m_activateOnPlayer;
 };
 
 class OilBarrel : public ActivatingObject
 {
 public:
 	OilBarrel(StudentWorld* world, int startX, int startY);
-	virtual void doSomething();
+	virtual void activate();
 	virtual bool needsToBePickedUpToFinishLevel() const { return true; };
 private:
+};
+
+class GoldNugget : public ActivatingObject
+{
+public:
+	GoldNugget(StudentWorld* world, int startX, int startY, bool temporary);
+	virtual void activate() {};
 };
 
 class Agent : public Object

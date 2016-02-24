@@ -8,31 +8,50 @@ Agent::Agent(StudentWorld* world, int startX, int startY, Direction startDir,
 	int imageID, unsigned int hitPoints) : Object(world, imageID, startX, startY, startDir, 1.0, 0)
 	, m_HP(hitPoints) {}
 
-ActivatingObject::ActivatingObject(StudentWorld* world, int startX, int startY, int imageID,
+ActivatingObject::ActivatingObject(StudentWorld* world, int startX, int startY, int imageID, 
 	int soundToPlay, bool activateOnPlayer, bool activateOnProtester, bool initallyActive) :
-	Object(world, imageID, startX, startY, right, 1.0, 2), m_soundToPlay(soundToPlay) {}
+	Object(world, imageID, startX, startY, right, 1.0, 2), m_soundToPlay(soundToPlay), 
+	m_activateOnPlayer(activateOnPlayer) {}
 
-ActivatingObject::~ActivatingObject() 
-{ getWorld()->playSound(m_soundToPlay); }
+void ActivatingObject::playSound() 
+{ 
+	getWorld()->playSound(m_soundToPlay);
+}
 
-OilBarrel::OilBarrel(StudentWorld* world, int startX, int startY) : ActivatingObject(world,
-	startX, startY, IID_BARREL, SOUND_FOUND_OIL, true, false, true) {}
-
-void OilBarrel::doSomething() 
+void ActivatingObject::doSomething() 
 {
 	if (!isAlive())
 		return;
-	Object* MrFrack = getWorld()->findNearbyFrackMan(this, 4);
-	if (!isVisible() && MrFrack != nullptr)
+	if (m_activateOnPlayer)
 	{
+		Object* MrFrack = getWorld()->findNearbyFrackMan(this, 4);
+		if (!isVisible() && MrFrack != nullptr)
+		{
+			setVisible(true);
+		}
+		MrFrack = getWorld()->findNearbyFrackMan(this, 3);
+		if (MrFrack != nullptr)
+		{
+			activate();
+			playSound();
+			kill();
+		}
+	}
+}
+
+GoldNugget::GoldNugget(StudentWorld* world, int startX, int startY, bool temporary):ActivatingObject(
+	world, startX, startY, IID_GOLD, temporary? SOUND_PROTESTER_FOUND_GOLD: SOUND_GOT_GOODIE, !temporary, temporary, temporary)
+{
+	//if (temporary)
 		setVisible(true);
-	}
-	MrFrack = getWorld()->findNearbyFrackMan(this, 3);
-	if (MrFrack != nullptr)
-	{
-		getWorld()->increaseScore(1000);
-		kill();
-	}
+}
+
+OilBarrel::OilBarrel(StudentWorld* world, int startX, int startY) : ActivatingObject(world,
+	startX, startY, IID_BARREL, SOUND_FOUND_OIL, true, false, false) {}
+
+void OilBarrel::activate()
+{
+	getWorld()->increaseScore(1000);
 }
 
 Boulder::Boulder(StudentWorld* world, int startX, int startY): Object(world, IID_BOULDER, 

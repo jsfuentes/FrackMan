@@ -55,6 +55,7 @@ int StudentWorld::init()
 	addActor(FrackMan_); //FrackMan is in array first so doesSomething first
 	addActor(Boulder_, B);
 	addActor(Oil_, m_BarrelsLeft);
+	addActor(Gold_, G);
 	return GWSTATUS_CONTINUE_GAME;
 }
 
@@ -90,6 +91,11 @@ void StudentWorld::addActor(ObjectName objectName, int number)
 				Object* oily = new OilBarrel(this, x, y);
 				m_Actors.push_back(oily);
 			}
+			else if (objectName == Gold_)
+			{
+				Object* goldy = new GoldNugget(this, x, y, true);
+				m_Actors.push_back(goldy);
+			}
 		}
 	}
 }
@@ -112,10 +118,7 @@ int StudentWorld::move()
 		if (!(*it)->isAlive())
 		{
 			if ((*it)->needsToBePickedUpToFinishLevel())
-			{
-				cout << "Before: " << m_BarrelsLeft--;
-				cout << "   After: " << m_BarrelsLeft << endl;
-			}
+				m_BarrelsLeft--;
 			delete (*it);
 			it = m_Actors.erase(it);
 		}

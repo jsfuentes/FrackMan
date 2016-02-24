@@ -41,6 +41,18 @@ public:
 private:
 };
 
+class ActivatingObject : public Object
+{
+public:
+	ActivatingObject(StudentWorld* world, int startX, int startY, int imageID,
+		int soundToPlay, bool activateOnPlayer, bool activateOnProtester, bool initallyActive);
+	virtual void doSomething() = 0;
+
+	// Set number of ticks until this object dies
+	void setTicksToLive() {};
+private:
+};
+
 class Agent : public Object
 {
 public:

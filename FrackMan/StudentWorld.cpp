@@ -93,7 +93,7 @@ void StudentWorld::addActor(ObjectName objectName, int number)
 			}
 			else if (objectName == Gold_)
 			{
-				Object* goldy = new GoldNugget(this, x, y, true);
+				Object* goldy = new GoldNugget(this, x, y, false);
 				m_Actors.push_back(goldy);
 			}
 		}
@@ -159,8 +159,12 @@ void StudentWorld::clearDirt(int x, int y)
 	{
 		for (int j = y; j < y + 4; j++)
 		{
-			delete m_Dirt[i][j];
-			m_Dirt[i][j] = nullptr;
+			if (m_Dirt[i][j] != nullptr)
+			{
+				playSound(SOUND_DIG);
+				delete m_Dirt[i][j];
+				m_Dirt[i][j] = nullptr;
+			}
 		}
 	}
 }

@@ -42,7 +42,7 @@ void ActivatingObject::doSomething()
 GoldNugget::GoldNugget(StudentWorld* world, int startX, int startY, bool temporary):ActivatingObject(
 	world, startX, startY, IID_GOLD, temporary? SOUND_PROTESTER_FOUND_GOLD: SOUND_GOT_GOODIE, !temporary, temporary, temporary)
 {
-	//if (temporary)
+	if (temporary)
 		setVisible(true);
 }
 

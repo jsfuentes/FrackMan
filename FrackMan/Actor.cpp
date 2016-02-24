@@ -2,7 +2,7 @@
 #include "StudentWorld.h"
 
 Object::Object(StudentWorld* world, int imageID, int startX, int startY, Direction dir, double size, unsigned int depth)
-	:GraphObject(imageID, startX, startY, dir, size, depth), m_world(world) {};
+	:GraphObject(imageID, startX, startY, dir, size, depth), m_world(world), m_isAlive(true) {};
 
 Agent::Agent(StudentWorld* world, int startX, int startY, Direction startDir,
 	int imageID, unsigned int hitPoints) : Object(world, imageID, startX, startY, startDir, 1.0, 0), m_HP(hitPoints)
@@ -26,8 +26,10 @@ void Boulder::doSomething()
 		{
 			if(delayCounter == 31) //just started falling(because iterators delayCounter before this(in if)
 				getWorld()->playSound(SOUND_FALLING_ROCK);
-			if(getWorld()->canActorMoveTo(this, getX(), getY() -1) && !isDirtBelow())
+			if (getWorld()->canActorMoveTo(this, getX(), getY() - 1) && !isDirtBelow())
 				moveTo(getX(), getY() - 1);
+			else
+				kill();
 		}
 	}
 }

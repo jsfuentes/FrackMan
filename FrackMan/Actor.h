@@ -13,8 +13,11 @@ public:
 	virtual bool canDigThroughDirt() const { return false; };
 	virtual bool canActorsPassThroughMe() const { return true; };
 	StudentWorld* getWorld() { return m_world; };
+	bool isAlive() { return m_isAlive; };
+	void kill() { m_isAlive = false; };
 private:
 	StudentWorld* m_world;
+	bool m_isAlive;
 };
 
 class Boulder : public Object

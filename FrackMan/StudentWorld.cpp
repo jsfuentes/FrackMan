@@ -92,15 +92,24 @@ void StudentWorld::clearDirt(int x, int y)
 
 int StudentWorld::move()
 {
-	// decLives();
-	// return GWSTATUS_PLAYER_DIED;
-	for (vector<Object*>::iterator it = m_Actors.begin(); it != m_Actors.end(); it++)
+	for (vector<Object*>::iterator it = m_Actors.begin(); it != m_Actors.end(); it++) //action
 	{
 		(*it)->doSomething();
 		if ((*it)->canDigThroughDirt())
 		{
 			clearDirt((*it)->getX(), (*it)->getY());
 		}
+	}
+	vector<Object*>::iterator it = m_Actors.begin(); 
+	while(it != m_Actors.end())//deletion
+	{
+		if (!(*it)->isAlive())
+		{
+			delete (*it);
+			it = m_Actors.erase(it);
+		}
+		else
+			it++;
 	}
 	return GWSTATUS_CONTINUE_GAME;
 }

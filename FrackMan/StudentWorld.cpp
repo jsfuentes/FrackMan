@@ -107,9 +107,10 @@ int StudentWorld::move()
 	for (vector<Object*>::iterator it = m_Actors.begin(); it != m_Actors.end(); it++) //action
 	{
 		(*it)->doSomething();
-		if ((*it)->canDigThroughDirt())
+		if ((*it)->canDigThroughDirt()) //only the man can dig through dirt
 		{
 			clearDirt((*it)->getX(), (*it)->getY());
+			revealAllNearbyObjects((*it)->getX(), (*it)->getY(), 4);
 		}
 	}
 	vector<Object*>::iterator it = m_Actors.begin(); 
@@ -153,6 +154,20 @@ void StudentWorld::cleanUp()
 ///////////////////////////////////
 /////HELPER FUNCTIONS
 //////////////////////////////////
+void StudentWorld::revealAllNearbyObjects(int x, int y, int radius)
+{
+	for (vector<Object*>::iterator it = m_Actors.begin(); it != m_Actors.end(); it++)
+	{
+		if (!(*it)->isVisible())
+		{
+			if (distanceBetween(*it, x, y) <= radius)
+			{
+				(*it)->setVisible(true);
+			}
+		}
+	}
+}
+
 void StudentWorld::clearDirt(int x, int y)
 {
 	for (int i = x; i < x + 4; i++)
@@ -214,12 +229,8 @@ Object* StudentWorld::objectCollided(Object* actor, int x, int y)//returns objec
 	{
 		if (*it != actor) //if they arent the same object
 		{
-			int dX = abs(x - (*it)->getX());
-			int dY = abs(y - (*it)->getY());
-			if (dX < 4 && dY < 4)
-			{
+			if(distanceBetween(*it, x, y) < 4)
 				return *it;
-			}
 		}
 	}
 	return nullptr;

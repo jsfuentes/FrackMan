@@ -24,12 +24,7 @@ void ActivatingObject::doSomething()
 		return;
 	if (m_activateOnPlayer)
 	{
-		Object* MrFrack = getWorld()->findNearbyFrackMan(this, 4);
-		if (!isVisible() && MrFrack != nullptr)
-		{
-			setVisible(true);
-		}
-		MrFrack = getWorld()->findNearbyFrackMan(this, 3);
+		Object* MrFrack = getWorld()->findNearbyFrackMan(this, 3);
 		if (MrFrack != nullptr)
 		{
 			activate();
@@ -49,7 +44,7 @@ GoldNugget::GoldNugget(StudentWorld* world, int startX, int startY, bool tempora
 
 void GoldNugget::activate() 
 {
-	if (activatesOnPlayer)
+	if (activatesOnPlayer())
 		getWorld()->increaseScore(10);
 	else
 		getWorld()->increaseScore(25);

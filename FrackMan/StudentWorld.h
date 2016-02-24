@@ -21,7 +21,7 @@ public:
 	virtual int init();
 	virtual int move();
 	virtual void cleanUp();
-	void revealAllNearbyObjects(int x, int y, int radius) {};
+	void revealAllNearbyObjects(int x, int y, int radius);
 	Object* findNearbyFrackMan(Object* a, int radius) const; //In man is within radius, return him if not null 
 	void addActor(ObjectName objectName, int number = 1); // adds"Boulder" and "FrackMan"
 	bool canActorMoveTo(Object* a, int x, int y); //checks boundaries and boulders

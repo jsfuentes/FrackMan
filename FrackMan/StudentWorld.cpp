@@ -52,15 +52,15 @@ int StudentWorld::init()
 			m_Dirt[column][row] = new Dirt(this, column, row);
 		}
 	}
-	addActor("FrackMan"); //FrackMan is in array first so doesSomething first
-	addActor("Boulder", B);
-	addActor("Oil", L);
+	addActor(FrackMan_); //FrackMan is in array first so doesSomething first
+	addActor(Boulder_, B);
+	addActor(Oil_, L);
 	return GWSTATUS_CONTINUE_GAME;
 }
 
-void StudentWorld::addActor(string objectName, int number)
+void StudentWorld::addActor(ObjectName objectName, int number)
 {
-	if (objectName == "FrackMan")
+	if (objectName == FrackMan_)
 	{
 		m_Actors.push_back(new FrackMan(this, 30, 60));
 		return;
@@ -68,7 +68,7 @@ void StudentWorld::addActor(string objectName, int number)
 	for (int i = 0; i < number; i++)
 	{
 		int x, y;
-		if (objectName == "Boulder")
+		if (objectName == Boulder_)
 		{
 			do {
 				x = randInt(0, 60);
@@ -85,7 +85,7 @@ void StudentWorld::addActor(string objectName, int number)
 				x = randInt(0, 60);
 				y = randInt(0, 56);
 			} while (withinMineShaft(y, x) || withinMineShaft(y, x + 4) || closeToObjects(x, y));
-			if (objectName == "Oil")
+			if (objectName == Oil_)
 			{
 				Object* oily = new OilBarrel(this, x, y);
 				m_Actors.push_back(oily);

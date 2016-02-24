@@ -15,6 +15,7 @@ int randInt(int min, int max); //at bottom of StudentWorld
 class StudentWorld : public GameWorld
 {
 public:
+	enum ObjectName { FrackMan_, Boulder_, Oil_ };
 	StudentWorld(std::string assetDir);
 	~StudentWorld();
 	virtual int init();
@@ -22,7 +23,7 @@ public:
 	virtual void cleanUp();
 	void revealAllNearbyObjects(int x, int y, int radius) {};
 	Object* findNearbyFrackMan(Object* a, int radius) const; //In man is within radius, return him if not null 
-	void addActor(std::string objectName, int number = 1); // adds"Boulder" and "FrackMan"
+	void addActor(ObjectName objectName, int number = 1); // adds"Boulder" and "FrackMan"
 	bool canActorMoveTo(Object* a, int x, int y); //checks boundaries and boulders
 	bool isDirtAt(int x, int y);
 	void clearDirt(int x, int y); //given the actors coordinates delete all dirt in 4x4

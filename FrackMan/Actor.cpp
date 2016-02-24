@@ -16,9 +16,7 @@ ActivatingObject::~ActivatingObject()
 { getWorld()->playSound(m_soundToPlay); }
 
 OilBarrel::OilBarrel(StudentWorld* world, int startX, int startY) : ActivatingObject(world,
-	startX, startY, IID_BARREL, SOUND_FOUND_OIL, true, false, true) {
-	setVisible(true);
-}
+	startX, startY, IID_BARREL, SOUND_FOUND_OIL, true, false, true) {}
 
 void OilBarrel::doSomething() 
 {

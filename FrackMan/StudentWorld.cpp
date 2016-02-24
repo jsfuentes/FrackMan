@@ -171,8 +171,6 @@ bool StudentWorld::closeToObjects(int x, int y)
 	bool isTooClose = false;
 	for (vector<Object*>::iterator it = m_Actors.begin(); it != m_Actors.end(); it++)
 	{
-		//if ((*it)->canDigThroughDirt()) //checks to see if its Frackman as only he return true here and there are no distance requirements from the man
-		//	continue;
 		if (distanceBetween(*it, x, y) <= 6)
 			isTooClose = true;
 	}

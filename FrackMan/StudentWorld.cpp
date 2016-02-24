@@ -54,7 +54,7 @@ int StudentWorld::init()
 	}
 	addActor("FrackMan"); //FrackMan is in array first so doesSomething first
 	addActor("Boulder", B);
-	addActor("Oil", 50);
+	addActor("Oil", L);
 	return GWSTATUS_CONTINUE_GAME;
 }
 

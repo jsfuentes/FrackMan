@@ -47,11 +47,13 @@ class ActivatingObject : public Object
 public:
 	ActivatingObject(StudentWorld* world, int startX, int startY, int imageID,
 		int soundToPlay, bool activateOnPlayer, bool activateOnProtester, bool initallyActive);
+	~ActivatingObject();
 	virtual void doSomething() = 0;
 
 	// Set number of ticks until this object dies
 	void setTicksToLive() {};
 private:
+	int m_soundToPlay;
 };
 
 class OilBarrel : public ActivatingObject

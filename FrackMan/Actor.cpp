@@ -2,20 +2,21 @@
 #include "StudentWorld.h"
 
 Object::Object(StudentWorld* world, int imageID, int startX, int startY, Direction dir, double size, unsigned int depth)
-	:GraphObject(imageID, startX, startY, dir, size, depth), m_world(world), m_isAlive(true) {};
+	:GraphObject(imageID, startX, startY, dir, size, depth), m_world(world), m_isAlive(true) {}
 
 Agent::Agent(StudentWorld* world, int startX, int startY, Direction startDir,
-	int imageID, unsigned int hitPoints) : Object(world, imageID, startX, startY, startDir, 1.0, 0), m_HP(hitPoints)
-{}
+	int imageID, unsigned int hitPoints) : Object(world, imageID, startX, startY, startDir, 1.0, 0)
+	, m_HP(hitPoints) {}
 
 ActivatingObject::ActivatingObject(StudentWorld* world, int startX, int startY, int imageID,
 	int soundToPlay, bool activateOnPlayer, bool activateOnProtester, bool initallyActive) :
-	Object(world, imageID, startX, startY, right, 1.0, 2)
-{}
+	Object(world, imageID, startX, startY, right, 1.0, 2), m_soundToPlay(soundToPlay) {}
+
+ActivatingObject::~ActivatingObject() 
+{ getWorld()->playSound(m_soundToPlay); }
 
 OilBarrel::OilBarrel(StudentWorld* world, int startX, int startY) : ActivatingObject(world,
-	startX, startY, IID_BARREL, SOUND_FOUND_OIL, true, false, true)
-{}
+	startX, startY, IID_BARREL, SOUND_FOUND_OIL, true, false, true) {}
 
 void OilBarrel::doSomething() 
 {
@@ -25,6 +26,11 @@ void OilBarrel::doSomething()
 	if (!isVisible() && MrFrack != nullptr)
 	{
 		setVisible(true);
+	}
+	MrFrack = getWorld()->findNearbyFrackMan(this, 3);
+	if (MrFrack != nullptr)
+	{
+		kill();
 	}
 }
 

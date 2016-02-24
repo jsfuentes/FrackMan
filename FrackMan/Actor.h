@@ -52,9 +52,11 @@ public:
 	virtual void activate() = 0; //specific actions to take
 	// Set number of ticks until this object dies
 	void setTicksToLive() {};
+	bool activatesOnPlayer() { return m_activateOnPlayer; };
 private:
 	int m_soundToPlay;
-	int m_activateOnPlayer;
+	bool m_activateOnPlayer;
+	bool m_activateOnProtestor;
 };
 
 class OilBarrel : public ActivatingObject
@@ -70,7 +72,7 @@ class GoldNugget : public ActivatingObject
 {
 public:
 	GoldNugget(StudentWorld* world, int startX, int startY, bool temporary);
-	virtual void activate() {};
+	virtual void activate();
 };
 
 class Agent : public Object

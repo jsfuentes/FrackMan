@@ -11,7 +11,7 @@ Agent::Agent(StudentWorld* world, int startX, int startY, Direction startDir,
 ActivatingObject::ActivatingObject(StudentWorld* world, int startX, int startY, int imageID, 
 	int soundToPlay, bool activateOnPlayer, bool activateOnProtester, bool initallyActive) :
 	Object(world, imageID, startX, startY, right, 1.0, 2), m_soundToPlay(soundToPlay), 
-	m_activateOnPlayer(activateOnPlayer) {}
+	m_activateOnPlayer(activateOnPlayer), m_activateOnProtestor(activateOnProtester) {}
 
 void ActivatingObject::playSound() 
 { 
@@ -40,10 +40,19 @@ void ActivatingObject::doSomething()
 }
 
 GoldNugget::GoldNugget(StudentWorld* world, int startX, int startY, bool temporary):ActivatingObject(
-	world, startX, startY, IID_GOLD, temporary? SOUND_PROTESTER_FOUND_GOLD: SOUND_GOT_GOODIE, !temporary, temporary, temporary)
+	world, startX, startY, IID_GOLD, temporary? SOUND_PROTESTER_FOUND_GOLD: SOUND_GOT_GOODIE, 
+	!temporary, temporary, temporary)
 {
 	if (temporary)
 		setVisible(true);
+}
+
+void GoldNugget::activate() 
+{
+	if (activatesOnPlayer)
+		getWorld()->increaseScore(10);
+	else
+		getWorld()->increaseScore(25);
 }
 
 OilBarrel::OilBarrel(StudentWorld* world, int startX, int startY) : ActivatingObject(world,

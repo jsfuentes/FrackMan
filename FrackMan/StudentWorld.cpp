@@ -236,8 +236,6 @@ bool StudentWorld::closeToObjects(int x, int y)
 	return isTooClose;
 }
 
-
-
 bool StudentWorld::withinMineShaft(int row, int column)
 {
 	if (row >= 4 && row <= 59 && column >= 30 && column <= 33)

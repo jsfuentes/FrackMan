@@ -5,6 +5,9 @@
 #include <algorithm>
 using namespace std;
 
+///////////////////////
+////MAIN FUNCTIONS
+//////////////////////
 GameWorld* createStudentWorld(string assetDir)
 {
 	return new StudentWorld(assetDir);
@@ -51,7 +54,7 @@ int StudentWorld::init()
 	}
 	addActor("FrackMan"); //FrackMan is in array first so doesSomething first
 	addActor("Boulder", B);
-	addActor("Oil", L);
+	addActor("Oil", 50);
 	return GWSTATUS_CONTINUE_GAME;
 }
 
@@ -91,17 +94,7 @@ void StudentWorld::addActor(string objectName, int number)
 	}
 }
 
-void StudentWorld::clearDirt(int x, int y)
-{
-	for (int i = x; i < x + 4; i++)
-	{
-		for (int j = y; j < y + 4; j++)
-		{
-			delete m_Dirt[i][j];
-			m_Dirt[i][j] = nullptr;
-		}
-	}
-}
+
 
 int StudentWorld::move()
 {
@@ -127,28 +120,6 @@ int StudentWorld::move()
 	return GWSTATUS_CONTINUE_GAME;
 }
 
-bool StudentWorld::canActorMoveTo(Object* a, int x, int y)
-{
-	if (x > 60 || x < 0 || y > 60 || y < 0) //within bounds
-			return false;
-	else
-	{
-		Object* intersectingA = objectCollided(a, x, y);
-		if (intersectingA == nullptr)
-			return true;
-		else
-			return intersectingA->canActorsPassThroughMe();
-	}
-}
-
-bool StudentWorld::isDirtAt(int x, int y)
-{
-	if (m_Dirt[x][y] != nullptr)
-		return true;
-	else
-		return false;
-}
-
 void StudentWorld::cleanUp()
 {
 	for (int column = 0; column < 64; column++)
@@ -165,9 +136,57 @@ void StudentWorld::cleanUp()
 		m_Actors.pop_back();
 	}
 }
+///////////////////////////////////
+/////HELPER FUNCTIONS
+//////////////////////////////////
+void StudentWorld::clearDirt(int x, int y)
+{
+	for (int i = x; i < x + 4; i++)
+	{
+		for (int j = y; j < y + 4; j++)
+		{
+			delete m_Dirt[i][j];
+			m_Dirt[i][j] = nullptr;
+		}
+	}
+}
 
+bool StudentWorld::canActorMoveTo(Object* a, int x, int y)
+{
+	if (x > 60 || x < 0 || y > 60 || y < 0) //within bounds
+			return false;
+	else
+	{
+		Object* intersectingA = objectCollided(a, x, y);
+		if (intersectingA == nullptr)
+			return true;
+		else
+			return intersectingA->canActorsPassThroughMe();
+	}
+}
+
+Object* StudentWorld::findNearbyFrackMan(Object* a, int radius) const
+{
+	Object* MrFrack = *m_Actors.begin(); //always Frackman since he was added first
+	return ((distanceBetween(MrFrack, a->getX(), a->getY())) <= radius ? MrFrack : nullptr);
+}
+
+bool StudentWorld::isDirtAt(int x, int y)
+{
+	if (m_Dirt[x][y] != nullptr)
+		return true;
+	else
+		return false;
+}
+
+double StudentWorld::distanceBetween(Object* a1, int x, int y) const
+{
+	int dX = x - a1->getX();
+	int dY = y - a1->getY();
+	return sqrt(pow(dX, 2) + pow(dY, 2));
+}
 ///////////////////////////
-//UTILITY FUNCTIONS (private or other)
+//PRIVATE OR UTILITY FUNCTIONS
 //////////////////////////
 Object* StudentWorld::objectCollided(Object* actor, int x, int y)//returns object if overlapping or null if not
 {
@@ -199,12 +218,7 @@ bool StudentWorld::closeToObjects(int x, int y)
 	return isTooClose;
 }
 
-double StudentWorld::distanceBetween(Object* a1, int x, int y)
-{
-	int dX = x - a1->getX();
-	int dY = y - a1->getY();
-	return sqrt(pow(dX, 2) + pow(dY, 2));
-}
+
 
 bool StudentWorld::withinMineShaft(int row, int column)
 {

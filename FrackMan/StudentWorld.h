@@ -7,7 +7,6 @@
 #include <vector>
 
 class Dirt;
-class FrackMan;
 class Object;
 
 int randInt(int min, int max); //at bottom of StudentWorld
@@ -21,16 +20,18 @@ public:
 	virtual int init();
 	virtual int move();
 	virtual void cleanUp();
+	void revealAllNearbyObjects(int x, int y, int radius) {};
+	Object* findNearbyFrackMan(Object* a, int radius) const; //In man is within radius, return him if not null 
 	void addActor(std::string objectName, int number = 1); // adds"Boulder" and "FrackMan"
 	bool canActorMoveTo(Object* a, int x, int y); //checks boundaries and boulders
 	bool isDirtAt(int x, int y);
 	void clearDirt(int x, int y); //given the actors coordinates delete all dirt in 4x4
+	double distanceBetween(Object* a1, int x, int y) const;
 
 private:
 	Object* objectCollided(Object* actor, int x, int y);
 	bool withinMineShaft(int x, int y);
 	bool closeToObjects(int x, int y);
-	double distanceBetween(Object* a1, int x, int y);
 	Dirt* m_Dirt[64][64];
 	std::vector <Object*> m_Actors;
 };

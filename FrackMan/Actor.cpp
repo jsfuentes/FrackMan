@@ -13,10 +13,19 @@ ActivatingObject::ActivatingObject(StudentWorld* world, int startX, int startY, 
 	Object(world, imageID, startX, startY, right, 1.0, 2)
 {}
 
-OilBarrel::OilBarrel(StudentWorld* world, int startX, int startY):ActivatingObject(world, 
+OilBarrel::OilBarrel(StudentWorld* world, int startX, int startY) : ActivatingObject(world,
 	startX, startY, IID_BARREL, SOUND_FOUND_OIL, true, false, true)
+{}
+
+void OilBarrel::doSomething() 
 {
-	setVisible(true);
+	if (!isAlive())
+		return;
+	Object* MrFrack = getWorld()->findNearbyFrackMan(this, 4);
+	if (!isVisible() && MrFrack != nullptr)
+	{
+		setVisible(true);
+	}
 }
 
 Boulder::Boulder(StudentWorld* world, int startX, int startY): Object(world, IID_BOULDER, 

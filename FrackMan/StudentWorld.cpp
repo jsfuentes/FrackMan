@@ -173,13 +173,17 @@ bool StudentWorld::closeToObjects(int x, int y)
 	{
 		//if ((*it)->canDigThroughDirt()) //checks to see if its Frackman as only he return true here and there are no distance requirements from the man
 		//	continue;
-		int dX = x - (*it)->getX();
-		int dY = y - (*it)->getY();
-		double distance = sqrt(pow(dX, 2) + pow(dY, 2));
-		if (distance <= 6)
+		if (distanceBetween(*it, x, y) <= 6)
 			isTooClose = true;
 	}
 	return isTooClose;
+}
+
+double StudentWorld::distanceBetween(Object* a1, int x, int y)
+{
+	int dX = x - a1->getX();
+	int dY = y - a1->getY();
+	return sqrt(pow(dX, 2) + pow(dY, 2));
 }
 
 bool StudentWorld::withinMineShaft(int row, int column)

@@ -30,6 +30,7 @@ private:
 	Object* objectCollided(Object* actor, int x, int y);
 	bool withinMineShaft(int x, int y);
 	bool closeToObjects(int x, int y);
+	double distanceBetween(Object* a1, int x, int y);
 	Dirt* m_Dirt[64][64];
 	std::vector <Object*> m_Actors;
 };

@@ -49,8 +49,9 @@ int StudentWorld::init()
 			m_Dirt[column][row] = new Dirt(this, column, row);
 		}
 	}
-	addActor("FrackMan");
-	addActor("Boulder", 15);
+	addActor("FrackMan"); //FrackMan is in array first so doesSomething first
+	addActor("Boulder", B);
+	addActor("Oil", L);
 	return GWSTATUS_CONTINUE_GAME;
 }
 
@@ -64,16 +65,28 @@ void StudentWorld::addActor(string objectName, int number)
 	for (int i = 0; i < number; i++)
 	{
 		int x, y;
-		do {
-			x = randInt(0, 60);
-			y = randInt(20, 56);
-		} while (withinMineShaft(y, x) || withinMineShaft(y, x + 4) || closeToObjects(x, y));
-		//calls within MineShaft twice, once for the bottom left edge and again for the bottom right edge
 		if (objectName == "Boulder")
 		{
+			do {
+				x = randInt(0, 60);
+				y = randInt(20, 56);
+			} while (withinMineShaft(y, x) || withinMineShaft(y, x + 4) || closeToObjects(x, y));
+		//calls within MineShaft twice, once for the bottom left edge and again for the bottom right edge
 			clearDirt(x, y);
 			Object* boldy = new Boulder(this, x, y);
 			m_Actors.push_back(boldy);
+		}
+		else 
+		{
+			do {
+				x = randInt(0, 60);
+				y = randInt(0, 56);
+			} while (withinMineShaft(y, x) || withinMineShaft(y, x + 4) || closeToObjects(x, y));
+			if (objectName == "Oil")
+			{
+				Object* oily = new OilBarrel(this, x, y);
+				m_Actors.push_back(oily);
+			}
 		}
 	}
 }

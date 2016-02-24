@@ -13,6 +13,12 @@ ActivatingObject::ActivatingObject(StudentWorld* world, int startX, int startY, 
 	Object(world, imageID, startX, startY, right, 1.0, 2)
 {}
 
+OilBarrel::OilBarrel(StudentWorld* world, int startX, int startY):ActivatingObject(world, 
+	startX, startY, IID_BARREL, SOUND_FOUND_OIL, true, false, true)
+{
+	setVisible(true);
+}
+
 Boulder::Boulder(StudentWorld* world, int startX, int startY): Object(world, IID_BOULDER, 
 	startX, startY, down, 1.0, 1), delayCounter(0), isStable(true)
 {

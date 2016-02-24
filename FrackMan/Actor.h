@@ -12,6 +12,7 @@ public:
 	virtual void doSomething() = 0;
 	virtual bool canDigThroughDirt() const { return false; };
 	virtual bool canActorsPassThroughMe() const { return true; };
+	virtual bool needsToBePickedUpToFinishLevel() const { return false; };
 	StudentWorld* getWorld() { return m_world; };
 	bool isAlive() { return m_isAlive; };
 	void kill() { m_isAlive = false; };
@@ -50,6 +51,15 @@ public:
 
 	// Set number of ticks until this object dies
 	void setTicksToLive() {};
+private:
+};
+
+class OilBarrel : public ActivatingObject
+{
+public:
+	OilBarrel(StudentWorld* world, int startX, int startY);
+	virtual void doSomething() {};
+	virtual bool needsToBePickedUpToFinishLevel() const { return true; };
 private:
 };
 

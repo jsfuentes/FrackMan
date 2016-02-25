@@ -50,6 +50,7 @@ public:
 	void playSound();
 	virtual void doSomething(); //general actions to take(look for Frackman or Protestor)
 	virtual void activate() = 0; //specific actions to take
+	virtual 
 	// Set number of ticks until this object dies
 	void setTicksToLive() {};
 	bool activatesOnPlayer() { return m_actOnPlayer; };
@@ -58,6 +59,12 @@ private:
 	bool m_actOnPlayer;
 	bool m_actOnProtestor;
 	int m_ptsWhenAct;
+};
+
+class SonarKit : public ActivatingObject
+{
+public:
+	SonarKit(StudentWorld* world, int startX, int startY);
 };
 
 class OilBarrel : public ActivatingObject

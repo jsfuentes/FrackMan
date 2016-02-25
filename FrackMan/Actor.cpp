@@ -35,6 +35,12 @@ void ActivatingObject::doSomething()
 	}
 }
 
+SonarKit::SonarKit(StudentWorld* world, int startX, int startY): ActivatingObject(world, startX, 
+	startY, IID_SONAR, SOUND_GOT_GOODIE, true, false, false, 75)
+{
+	setVisible(true);
+}
+
 GoldNugget::GoldNugget(StudentWorld* world, int startX, int startY, bool temporary):ActivatingObject(
 	world, startX, startY, IID_GOLD, temporary? SOUND_PROTESTER_FOUND_GOLD: SOUND_GOT_GOODIE, 
 	!temporary, temporary, temporary, temporary ? 25 : 10)

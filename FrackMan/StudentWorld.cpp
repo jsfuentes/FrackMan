@@ -45,6 +45,8 @@ int StudentWorld::init()
 	m_BarrelsLeft = min(2 + currentLevel, 20);
 	m_MaxProtestors = max(25, 200 - currentLevel);
 	m_ProtestorsAddWaitTime = min(15.0, 2 + (currentLevel * 1.5)); //double truncated but its k
+	m_currentProtestors = 0;
+	m_currentTimeSinceAdd = -1;
 	for (int column = 0; column < 64; column++)
 	{
 		for (int row = 0; row < 64; row++)
@@ -75,6 +77,11 @@ void StudentWorld::addActor(ObjectName objectName, int number)
 	for (int i = 0; i < number; i++)
 	{
 		int x, y;
+		if (objectName == RegularProtester_)
+		{
+			Object* regPro = new RegularProtester(this, 60, 60);
+			m_Actors.push_back(regPro);
+		}
 		if (objectName == Sonar_)
 		{
 			Object* sony = new SonarKit(this, 0, 60);
@@ -124,9 +131,21 @@ void StudentWorld::addActor(ObjectName objectName, int number)
 
 int StudentWorld::move()
 {
-	setDisplayText();
+	setDisplayText(); //text updating
 	int G = getLevel() * 25 + 300; //new Goodie chance is 1/G
-	if (randInt(1, 100) == 1)//insertion
+	if (m_currentTimeSinceAdd == -1 || m_currentTimeSinceAdd++ >= m_ProtestorsAddWaitTime) //increments here after evaluated
+		if (m_currentProtestors < m_MaxProtestors)
+		{
+			int probOfHardcore = min(90, (static_cast<int>(getLevel()) * 10) + 30);
+			if (randInt(1, 100) <= probOfHardcore)
+			{
+
+			}
+			else
+				addActor(RegularProtester_);
+			m_currentTimeSinceAdd = 0;
+		}
+	if (randInt(1, 100) == 1)//insertion, DONT FORGET TO CHANGE THIS TO G
 	{
 		if (randInt(1, 5) == 1)
 			addActor(Sonar_);

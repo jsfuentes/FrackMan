@@ -44,7 +44,7 @@ int StudentWorld::init()
 	int G = max(5 - (currentLevel) / 2, 2);
 	m_BarrelsLeft = min(2 + currentLevel, 20);
 	m_MaxProtestors = max(25, 200 - currentLevel);
-	m_ProtestorsAddWaitTime = min(15.0, 2 + (currentLevel * 1.5));
+	m_ProtestorsAddWaitTime = min(15.0, 2 + (currentLevel * 1.5)); //double truncated but its k
 	for (int column = 0; column < 64; column++)
 	{
 		for (int row = 0; row < 64; row++)

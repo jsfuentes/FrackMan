@@ -48,6 +48,7 @@ public:
 	ActivatingObject(StudentWorld* world, int startX, int startY, int imageID,
 		int soundToPlay, bool actOnPlayer, bool actOnProtester, bool initallyActive, 
 		int ptsWhenAct = 0);
+	virtual ~ActivatingObject() {};
 	void playSound();
 	virtual void doSomething(); //general actions to take(look for Frackman or Protestor)
 	virtual void activate() {}; //specific actions to take
@@ -96,6 +97,7 @@ class Agent : public Object
 public:
 	Agent(StudentWorld* world, int startX, int startY, Direction startDir,
 		int imageID, unsigned int hitPoints);
+	virtual ~Agent() {};
 	unsigned int getHP() const { return m_HP; };
 	virtual void addGold() = 0;
 private:
@@ -127,6 +129,7 @@ class Protester : public Agent
 public:
 	Protester(StudentWorld* world, int startX, int startY, int imageID,
 		unsigned int hitPoints, unsigned int score);
+	virtual ~Protester() {};
 	virtual void doSomething() {};
 	virtual bool annoy(unsigned int amount) { return false; };
 	virtual void addGold() {};

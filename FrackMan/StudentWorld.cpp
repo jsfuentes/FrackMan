@@ -34,6 +34,7 @@ StudentWorld::~StudentWorld()
 		delete m_Actors.back();
 		m_Actors.pop_back();
 	}
+	delete m_FrackMan;
 }
 
 int StudentWorld::init()
@@ -54,7 +55,7 @@ int StudentWorld::init()
 			m_Dirt[column][row] = new Dirt(this, column, row);
 		}
 	}
-	addActor(FrackMan_); //FrackMan is in array first so doesSomething first
+	addActor(FrackMan_); 
 	addActor(Boulder_, B);
 	addActor(Oil_, m_BarrelsLeft);
 	addActor(Gold_, G);
@@ -65,7 +66,7 @@ void StudentWorld::addActor(ObjectName objectName, int number)
 {
 	if (objectName == FrackMan_)
 	{
-		m_Actors.push_back(new FrackMan(this, 30, 60));
+		m_FrackMan = new FrackMan(this, 30, 60);
 		return;
 	}
 	for (int i = 0; i < number; i++)
@@ -129,17 +130,14 @@ int StudentWorld::move()
 		else
 			addActor(Water_);
 	}
-	for (vector<Object*>::iterator it = m_Actors.begin(); it != m_Actors.end(); it++) //action
-	{
+	m_FrackMan->doSomething(); //action
+	clearDirt(m_FrackMan->getX(), m_FrackMan->getY(), true);
+	revealAllNearbyObjects(m_FrackMan->getX(), m_FrackMan->getY(), 4);
+	vector<Object*>::iterator it = m_Actors.begin();
+	for (; it != m_Actors.end(); it++)
 		(*it)->doSomething();
-		if ((*it)->canDigThroughDirt()) //only the man can dig through dirt
-		{
-			clearDirt((*it)->getX(), (*it)->getY(), true);
-			revealAllNearbyObjects((*it)->getX(), (*it)->getY(), 4);
-		}
-	}
-	vector<Object*>::iterator it = m_Actors.begin(); 
-	while(it != m_Actors.end()) //deletion
+	it = m_Actors.begin(); //deletion
+	while(it != m_Actors.end()) 
 	{
 		if (!(*it)->isAlive())
 		{
@@ -175,6 +173,7 @@ void StudentWorld::cleanUp()
 		delete m_Actors.back();
 		m_Actors.pop_back();
 	}
+	delete m_FrackMan;
 }
 ///////////////////////////////////
 /////HELPER FUNCTIONS
@@ -228,8 +227,7 @@ bool StudentWorld::canActorMoveTo(Object* a, int x, int y)
 
 Object* StudentWorld::findNearbyFrackMan(Object* a, int radius) const
 {
-	Object* MrFrack = *m_Actors.begin(); //always Frackman since he was added first
-	return ((distanceBetween(MrFrack, a->getX(), a->getY())) <= radius ? MrFrack : nullptr);
+	return ((distanceBetween(m_FrackMan, a->getX(), a->getY())) <= radius ? m_FrackMan : nullptr);
 }
 
 bool StudentWorld::isDirtAt(int x, int y)
@@ -266,9 +264,6 @@ double StudentWorld::distanceBetween(Object* a1, int x, int y) const
 //////////////////////////
 void StudentWorld::setDisplayText()
 {
-	int score = getScore();
-	int level = getLevel();
-	int lives = getLives();
 	int health = 0;
 	int squirts = 0;
 	int gold = 0;
@@ -278,10 +273,10 @@ void StudentWorld::setDisplayText()
 	oss.setf(ios::fixed);
 	oss.precision(0);
 	oss.fill('0');
-	oss << "Scr: " << setw(6) << score;
+	oss << "Scr: " << setw(6) << getScore();
 	oss.fill(' ');
-	oss << "  Lvl: " << setw(2) << level;
-	oss << "  Lives: " << lives;
+	oss << "  Lvl: " << setw(2) << getLevel();
+	oss << "  Lives: " << getLives();
 	oss << "  Hlth: " << setw(3) << health * 10 << "%";
 	oss << "  Wtr: " << setw(2) << squirts;
 	oss << "  Gld: " << setw(2) << gold;
@@ -295,13 +290,12 @@ Object* StudentWorld::objectCollided(Object* actor, int x, int y)//returns objec
 {
 	if (actor == nullptr)
 		return nullptr;
+	if (m_FrackMan != actor && distanceBetween(m_FrackMan, x, y) < 4)
+		return m_FrackMan;
 	for (vector<Object*>::iterator it = m_Actors.begin(); it != m_Actors.end(); it++)
 	{
-		if (*it != actor) //if they arent the same object
-		{
-			if(distanceBetween(*it, x, y) < 4)
+		if (*it != actor && distanceBetween(*it, x, y) < 4)
 				return *it;
-		}
 	}
 	return nullptr;
 }

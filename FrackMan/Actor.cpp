@@ -109,8 +109,10 @@ Dirt::Dirt(StudentWorld* world, int startX, int startY) : Object(world, IID_DIRT
 	setVisible(true);
 };
 
-FrackMan::FrackMan(StudentWorld* world, int startX, int startY) : Agent(world, startX, startY, right, IID_PLAYER, 10)
+FrackMan::FrackMan(StudentWorld* world, int startX, int startY) : Agent(world, startX, startY, right, 
+	IID_PLAYER, 10), m_Gold(0), m_Sonar(1), m_Squirts(5)
 {
+
 	setVisible(true);
 };
 

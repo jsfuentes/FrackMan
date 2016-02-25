@@ -8,6 +8,7 @@
 
 class Dirt;
 class Object;
+class FrackMan;
 
 int randInt(int min, int max); //at bottom of StudentWorld
 // Students:  Add code to this file, StudentWorld.cpp, Actor.h, and Actor.cpp
@@ -38,6 +39,7 @@ private:
 	bool closeToObjects(int x, int y);
 	Dirt* m_Dirt[64][64];
 	std::vector <Object*> m_Actors;
+	FrackMan* m_FrackMan;
 	int m_BarrelsLeft;
 };
 

@@ -123,7 +123,7 @@ int StudentWorld::move()
 {
 	setDisplayText();
 	int G = getLevel() * 25 + 300; //new Goodie chance is 1/G
-	if (randInt(1, 20) == 1)//insertion
+	if (randInt(1, 100) == 1)//insertion
 	{
 		if (randInt(1, 5) == 1)
 			addActor(Sonar_);

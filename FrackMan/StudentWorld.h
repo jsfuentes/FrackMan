@@ -44,3 +44,7 @@ private:
 };
 
 #endif // STUDENTWORLD_H_
+
+/*
+It was ambigious whether to have the guy kill himself immediately without any other actor doing anthign, but the two extra lines of code this needed seem unneccessary
+*/

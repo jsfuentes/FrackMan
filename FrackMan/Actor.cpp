@@ -176,6 +176,11 @@ void FrackMan::doSomething()
 			kill();
 			break;
 		case KEY_PRESS_SPACE:
+			if (m_Squirts > 0)
+			{
+				m_Squirts--;
+			}
+			break;
 		case 'Z':
 		case 'z':
 			if (m_Sonar > 0)

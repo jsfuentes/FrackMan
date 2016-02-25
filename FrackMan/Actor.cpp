@@ -43,12 +43,15 @@ void ActivatingObject::doSomething()
 			kill();
 		}
 	}
-	if (m_temporary) //m_temporary in and ensures m_ticksLeft intialized
+	if (m_temporary) //m_temporary ensures m_ticksLeft intialized
 	{
 		if(m_ticksLeft-- == 0)
 			kill();
 	}
 }
+
+WaterPool::WaterPool(StudentWorld* world, int startX, int startY):ActivatingObject(world, startX, 
+	startY, IID_WATER_POOL, SOUND_GOT_GOODIE, true, false, true, 100) {}
 
 SonarKit::SonarKit(StudentWorld* world, int startX, int startY): ActivatingObject(world, startX, 
 	startY, IID_SONAR, SOUND_GOT_GOODIE, true, false, true, 75) {}

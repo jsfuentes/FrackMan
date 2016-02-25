@@ -69,18 +69,27 @@ void StudentWorld::addActor(ObjectName objectName, int number)
 	for (int i = 0; i < number; i++)
 	{
 		int x, y;
-		if (objectName == Boulder_)
+		if (objectName == Sonar_)
+		{
+			Object* sony = new SonarKit(this, 0, 60);
+			m_Actors.push_back(sony);
+		}
+		if (objectName == Water_)
+		{
+			//Object* pooly = new WaterPool(this, )
+		}
+		else if (objectName == Boulder_) //object randomly placed over top of map
 		{
 			do {
 				x = randInt(0, 60);
 				y = randInt(20, 56);
 			} while (withinMineShaft(y, x) || withinMineShaft(y, x + 4) || closeToObjects(x, y));
 		//calls within MineShaft twice, once for the bottom left edge and again for the bottom right edge
-			clearDirt(x, y);
+			clearDirt(x, y, false);
 			Object* boldy = new Boulder(this, x, y);
 			m_Actors.push_back(boldy);
 		}
-		else 
+		else //randomly placed objects over entire map
 		{
 			do {
 				x = randInt(0, 60);
@@ -93,7 +102,7 @@ void StudentWorld::addActor(ObjectName objectName, int number)
 			}
 			else if (objectName == Gold_)
 			{
-				Object* goldy = new GoldNugget(this, x, y, true);
+				Object* goldy = new GoldNugget(this, x, y, false);
 				m_Actors.push_back(goldy);
 			}
 		}
@@ -104,12 +113,20 @@ void StudentWorld::addActor(ObjectName objectName, int number)
 
 int StudentWorld::move()
 {
+	double G = getLevel() * 25 + 300; //new Goodie chance is 1/G
+	if (randInt(0, 10) == 0)//insertion
+	{
+		if (randInt(0, 1) == 0)
+			addActor(Sonar_);
+		else
+			addActor(Water_);
+	}
 	for (vector<Object*>::iterator it = m_Actors.begin(); it != m_Actors.end(); it++) //action
 	{
 		(*it)->doSomething();
 		if ((*it)->canDigThroughDirt()) //only the man can dig through dirt
 		{
-			clearDirt((*it)->getX(), (*it)->getY());
+			clearDirt((*it)->getX(), (*it)->getY(), true);
 			revealAllNearbyObjects((*it)->getX(), (*it)->getY(), 4);
 		}
 	}
@@ -168,7 +185,7 @@ void StudentWorld::revealAllNearbyObjects(int x, int y, int radius)
 	}
 }
 
-void StudentWorld::clearDirt(int x, int y)
+void StudentWorld::clearDirt(int x, int y, bool sound)
 {
 	for (int i = x; i < x + 4; i++)
 	{
@@ -176,7 +193,10 @@ void StudentWorld::clearDirt(int x, int y)
 		{
 			if (m_Dirt[i][j] != nullptr)
 			{
-				playSound(SOUND_DIG);
+				if (sound)
+				{
+					playSound(SOUND_DIG);
+				}
 				delete m_Dirt[i][j];
 				m_Dirt[i][j] = nullptr;
 			}

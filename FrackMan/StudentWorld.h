@@ -15,7 +15,7 @@ int randInt(int min, int max); //at bottom of StudentWorld
 class StudentWorld : public GameWorld
 {
 public:
-	enum ObjectName { FrackMan_, Boulder_, Oil_, Gold_ };
+	enum ObjectName { FrackMan_, Boulder_, Oil_, Gold_, Sonar_, Water_};
 	StudentWorld(std::string assetDir);
 	~StudentWorld();
 	virtual int init();
@@ -26,7 +26,7 @@ public:
 	void addActor(ObjectName objectName, int number = 1); // adds"Boulder" and "FrackMan"
 	bool canActorMoveTo(Object* a, int x, int y); //checks boundaries and boulders
 	bool isDirtAt(int x, int y);
-	void clearDirt(int x, int y); //given the actors coordinates delete all dirt in 4x4
+	void clearDirt(int x, int y, bool sound); //given the actors coordinates delete all dirt in 4x4
 	double distanceBetween(Object* a1, int x, int y) const;
 
 private:

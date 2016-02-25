@@ -62,10 +62,18 @@ private:
 	int m_ptsWhenAct;
 };
 
+class WaterPool : public ActivatingObject
+{
+public:
+	WaterPool(StudentWorld* world, int startX, int startY);
+	virtual void activate() {};
+};
+
 class SonarKit : public ActivatingObject
 {
 public:
 	SonarKit(StudentWorld* world, int startX, int startY);
+	virtual void activate() {};
 };
 
 class OilBarrel : public ActivatingObject

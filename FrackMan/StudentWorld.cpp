@@ -93,7 +93,7 @@ void StudentWorld::addActor(ObjectName objectName, int number)
 			}
 			else if (objectName == Gold_)
 			{
-				Object* goldy = new GoldNugget(this, x, y, false);
+				Object* goldy = new GoldNugget(this, x, y, true);
 				m_Actors.push_back(goldy);
 			}
 		}

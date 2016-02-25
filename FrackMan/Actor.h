@@ -46,16 +46,17 @@ class ActivatingObject : public Object
 {
 public:
 	ActivatingObject(StudentWorld* world, int startX, int startY, int imageID,
-		int soundToPlay, bool actOnPlayer, bool actOnProtester, bool initallyActive, int ptsWhenAct = 0);
+		int soundToPlay, bool actOnPlayer, bool actOnProtester, bool initallyActive, 
+		int ptsWhenAct = 0);
 	void playSound();
 	virtual void doSomething(); //general actions to take(look for Frackman or Protestor)
 	virtual void activate() = 0; //specific actions to take
-	virtual 
-	// Set number of ticks until this object dies
-	void setTicksToLive() {};
+	void setTicksToLive(int ticksLeft) { m_ticksLeft = ticksLeft; };
 	bool activatesOnPlayer() { return m_actOnPlayer; };
 private:
+	int m_ticksLeft;
 	int m_soundToPlay;
+	bool m_temporary;
 	bool m_actOnPlayer;
 	bool m_actOnProtestor;
 	int m_ptsWhenAct;

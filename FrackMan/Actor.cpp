@@ -1,5 +1,7 @@
 #include "Actor.h"
 #include "StudentWorld.h"
+#include <algorithm>
+using namespace std;
 
 Object::Object(StudentWorld* world, int imageID, int startX, int startY, Direction dir, double size, unsigned int depth)
 	:GraphObject(imageID, startX, startY, dir, size, depth), m_world(world), m_isAlive(true) {}
@@ -11,7 +13,15 @@ Agent::Agent(StudentWorld* world, int startX, int startY, Direction startDir,
 ActivatingObject::ActivatingObject(StudentWorld* world, int startX, int startY, int imageID, 
 	int soundToPlay, bool actOnPlayer, bool actOnProtester, bool initallyActive, int ptsWhenAct) : 
 	Object(world, imageID, startX, startY, right, 1.0, 2), m_soundToPlay(soundToPlay), 
-	m_actOnPlayer(actOnPlayer), m_actOnProtestor(actOnProtester), m_ptsWhenAct(ptsWhenAct) {}
+	m_actOnPlayer(actOnPlayer), m_actOnProtestor(actOnProtester), m_ptsWhenAct(ptsWhenAct)
+{
+	if (initallyActive)
+	{
+		setVisible(true);
+		m_temporary = true;
+		setTicksToLive(max(100, 300-10* (static_cast<int>(getWorld()->getLevel()))));
+	}
+}
 
 void ActivatingObject::playSound() 
 { 
@@ -33,21 +43,19 @@ void ActivatingObject::doSomething()
 			kill();
 		}
 	}
+	if (m_temporary) //m_temporary in and ensures m_ticksLeft intialized
+	{
+		if(m_ticksLeft-- == 0)
+			kill();
+	}
 }
 
 SonarKit::SonarKit(StudentWorld* world, int startX, int startY): ActivatingObject(world, startX, 
-	startY, IID_SONAR, SOUND_GOT_GOODIE, true, false, false, 75)
-{
-	setVisible(true);
-}
+	startY, IID_SONAR, SOUND_GOT_GOODIE, true, false, true, 75) {}
 
 GoldNugget::GoldNugget(StudentWorld* world, int startX, int startY, bool temporary):ActivatingObject(
 	world, startX, startY, IID_GOLD, temporary? SOUND_PROTESTER_FOUND_GOLD: SOUND_GOT_GOODIE, 
-	!temporary, temporary, temporary, temporary ? 25 : 10)
-{
-	if (temporary)
-		setVisible(true);
-}
+	!temporary, temporary, temporary, temporary ? 25 : 10) {}
 
 void GoldNugget::activate() 
 {}

@@ -4,11 +4,12 @@
 using namespace std;
 
 Object::Object(StudentWorld* world, int imageID, int startX, int startY, Direction dir, double size, unsigned int depth)
-	:GraphObject(imageID, startX, startY, dir, size, depth), m_world(world), m_isAlive(true) {}
+	:GraphObject(imageID, startX, startY, dir, size, depth), m_world(world), m_isAlive(true) 
+{
+	setVisible(true);
+}
 
-Agent::Agent(StudentWorld* world, int startX, int startY, Direction startDir,
-	int imageID, unsigned int hitPoints) : Object(world, imageID, startX, startY, startDir, 1.0, 0)
-	, m_HP(hitPoints) {}
+
 
 ActivatingObject::ActivatingObject(StudentWorld* world, int startX, int startY, int imageID, 
 	int soundToPlay, bool actOnPlayer, bool actOnProtester, bool initallyActive, int ptsWhenAct) : 
@@ -16,11 +17,12 @@ ActivatingObject::ActivatingObject(StudentWorld* world, int startX, int startY, 
 	m_actOnPlayer(actOnPlayer), m_actOnProtestor(actOnProtester), m_ptsWhenAct(ptsWhenAct)
 {
 	if (initallyActive)
-	{
-		setVisible(true);
+	{		
 		m_temporary = true;
 		setTicksToLive(max(100, 300-10* (static_cast<int>(getWorld()->getLevel()))));
 	}
+	else
+		setVisible(false);
 }
 
 void ActivatingObject::playSound() 
@@ -85,10 +87,7 @@ OilBarrel::OilBarrel(StudentWorld* world, int startX, int startY) : ActivatingOb
 
 
 Boulder::Boulder(StudentWorld* world, int startX, int startY): Object(world, IID_BOULDER, 
-	startX, startY, down, 1.0, 1), delayCounter(0), isStable(true)
-{
-	setVisible(true);
-}
+	startX, startY, down, 1.0, 1), delayCounter(0), isStable(true) {}
 
 void Boulder::doSomething() 
 {
@@ -119,17 +118,22 @@ bool Boulder::isDirtBelow()
 	return isDirtBelow;
 }
 
-Dirt::Dirt(StudentWorld* world, int startX, int startY) : Object(world, IID_DIRT, startX, startY, right, .25, 3)
-{
-	setVisible(true);
-};
+Dirt::Dirt(StudentWorld* world, int startX, int startY) : Object(world, IID_DIRT, startX, startY, 
+	right, .25, 3) {}
 
-FrackMan::FrackMan(StudentWorld* world, int startX, int startY) : Agent(world, startX, startY, right, 
-	IID_PLAYER, 10), m_Gold(0), m_Sonar(1), m_Squirts(5)
-{
+Agent::Agent(StudentWorld* world, int startX, int startY, Direction startDir,
+	int imageID, unsigned int hitPoints) : Object(world, imageID, startX, startY, startDir, 1.0, 0)
+	, m_HP(hitPoints) {}
 
-	setVisible(true);
-};
+Protester::Protester(StudentWorld* world, int startX, int startY, int imageID, unsigned int hitPoints,
+	unsigned int score):Agent(world, startX, startY, left, imageID, hitPoints), 
+	m_StepsForward(randInt(8, 60)), m_Leaving(false) {}
+
+RegularProtester::RegularProtester(StudentWorld* world, int startX, int startY): Protester(
+	world, startX, startY, IID_PROTESTER, 5, 100) {}
+
+FrackMan::FrackMan(StudentWorld* world, int startX, int startY) : Agent(world, startX, startY, right,
+	IID_PLAYER, 10), m_Gold(0), m_Sonar(1), m_Squirts(5) {}
 
 void FrackMan::doSomething()
 {
@@ -174,6 +178,7 @@ void FrackMan::doSomething()
 			break;
 		case KEY_PRESS_ESCAPE:
 			kill();
+			getWorld()->decLives();
 			break;
 		case KEY_PRESS_SPACE:
 			if (m_Squirts > 0)

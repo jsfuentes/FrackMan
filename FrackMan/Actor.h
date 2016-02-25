@@ -111,7 +111,7 @@ public:
 	bool canDigThroughDirt() const{ return true; };
 	virtual void addGold() { m_Gold++; };
 	void addSonar() { m_Sonar++; };
-	void addWater() { m_Squirts++; };
+	void addWater() { m_Squirts+=5; };
 	int getGold() const { return m_Gold; };
 	int getSonar() const { return m_Sonar; };
 	int getWater() const { return m_Squirts; };
@@ -120,5 +120,33 @@ private:
 	int m_Squirts;
 	int m_Sonar;
 	int m_Gold;
+};
+
+class Protester : public Agent
+{
+public:
+	Protester(StudentWorld* world, int startX, int startY, int imageID,
+		unsigned int hitPoints, unsigned int score);
+	virtual void doSomething() {};
+	virtual bool annoy(unsigned int amount) { return false; };
+	virtual void addGold() {};
+	virtual bool huntsFrackMan() const { return true; };
+	// Set state to having given up protest
+	void setMustLeaveOilField() { m_Leaving = true; };
+	// Set number of ticks until next move
+	void setTicksToNextMove() {};
+private:
+	bool m_Leaving;
+	int m_StepsForward;
+	int m_WaitingTime;
+	int m_TimeSincePerp;
+};
+
+class RegularProtester : public Protester
+{
+public:
+	RegularProtester(StudentWorld* world, int startX, int startY);
+	virtual void move() {};
+	virtual void addGold() {};
 };
 #endif //Actor.h

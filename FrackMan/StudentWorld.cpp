@@ -39,9 +39,12 @@ StudentWorld::~StudentWorld()
 
 int StudentWorld::init()
 {
-	int B = min((static_cast<int>(getLevel()) / 2) + 2, 6); //getLevel() returns unsigned int(could produce error for a HUGE level
-	int G = max(5 - (static_cast<int>(getLevel()) / 2), 2);
-	m_BarrelsLeft = min(2 + static_cast<int>(getLevel()), 20);
+	int currentLevel = static_cast<int>(getLevel());
+	int B = min((currentLevel / 2) + 2, 6); //getLevel() returns unsigned int(could produce error for a HUGE level
+	int G = max(5 - (currentLevel) / 2, 2);
+	m_BarrelsLeft = min(2 + currentLevel, 20);
+	m_MaxProtestors = max(25, 200 - currentLevel);
+	m_ProtestorsAddWaitTime = min(15.0, 2 + (currentLevel * 1.5));
 	for (int column = 0; column < 64; column++)
 	{
 		for (int row = 0; row < 64; row++)

@@ -41,6 +41,10 @@ private:
 	std::vector <Object*> m_Actors;
 	FrackMan* m_FrackMan;
 	int m_BarrelsLeft;
+	int m_MaxProtestors;
+	int m_currentProtestors;
+	int m_ProtestorsAddWaitTime;
+	int m_currentTimeSinceAdd;
 };
 
 #endif // STUDENTWORLD_H_

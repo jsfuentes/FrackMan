@@ -76,7 +76,12 @@ void StudentWorld::addActor(ObjectName objectName, int number)
 		}
 		if (objectName == Water_)
 		{
-			//Object* pooly = new WaterPool(this, )
+			do {
+				x = randInt(0, 60); //60 because images location decided by bottomleft corner
+				y = randInt(0, 60);
+			} while (isDirtAround(x, y));
+			Object* pooly = new WaterPool(this, x, y);
+			m_Actors.push_back(pooly);
 		}
 		else if (objectName == Boulder_) //object randomly placed over top of map
 		{
@@ -230,6 +235,21 @@ bool StudentWorld::isDirtAt(int x, int y)
 		return true;
 	else
 		return false;
+}
+
+bool StudentWorld::isDirtAround(int x, int y)
+{
+	for (int i = x; i < x + 4 ; i++)
+	{
+		for (int j = y; j < y + 4; j++)
+		{
+			if (m_Dirt[i][j] != nullptr)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 double StudentWorld::distanceBetween(Object* a1, int x, int y) const

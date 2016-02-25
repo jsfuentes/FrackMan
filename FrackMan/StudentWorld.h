@@ -21,9 +21,10 @@ public:
 	virtual int init();
 	virtual int move();
 	virtual void cleanUp();
+	
 	void revealAllNearbyObjects(int x, int y, int radius);
 	Object* findNearbyFrackMan(Object* a, int radius) const; //In man is within radius, return him if not null 
-	void addActor(ObjectName objectName, int number = 1); // adds"Boulder" and "FrackMan"
+	void addActor(ObjectName objectName, int number = 1); // adds object base on enumerator
 	bool canActorMoveTo(Object* a, int x, int y); //checks boundaries and boulders
 	bool isDirtAt(int x, int y);
 	bool isDirtAround(int x, int y); //different from dirt at as it checks the 4x4 square using x,y as bottom left
@@ -31,6 +32,7 @@ public:
 	double distanceBetween(Object* a1, int x, int y) const;
 
 private:
+	void setDisplayText();
 	Object* objectCollided(Object* actor, int x, int y);
 	bool withinMineShaft(int x, int y);
 	bool closeToObjects(int x, int y);

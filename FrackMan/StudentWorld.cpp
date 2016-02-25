@@ -3,6 +3,8 @@
 #include <string>
 #include <random>
 #include <algorithm>
+#include <sstream>
+#include <iomanip>
 using namespace std;
 
 ///////////////////////
@@ -118,10 +120,11 @@ void StudentWorld::addActor(ObjectName objectName, int number)
 
 int StudentWorld::move()
 {
-	double G = getLevel() * 25 + 300; //new Goodie chance is 1/G
-	if (randInt(0, 10) == 0)//insertion
+	setDisplayText();
+	int G = getLevel() * 25 + 300; //new Goodie chance is 1/G
+	if (randInt(1, G) == 1)//insertion
 	{
-		if (randInt(0, 1) == 0)
+		if (randInt(1, 5) == 1)
 			addActor(Sonar_);
 		else
 			addActor(Water_);
@@ -261,6 +264,33 @@ double StudentWorld::distanceBetween(Object* a1, int x, int y) const
 ///////////////////////////
 //PRIVATE OR UTILITY FUNCTIONS
 //////////////////////////
+void StudentWorld::setDisplayText()
+{
+	int score = getScore();
+	int level = getLevel();
+	int lives = getLives();
+	int health = 0;
+	int squirts = 0;
+	int gold = 0;
+	int sonar = 0;
+	int barrelsLeft = m_BarrelsLeft;
+	ostringstream oss;
+	oss.setf(ios::fixed);
+	oss.precision(0);
+	oss.fill('0');
+	oss << "Scr: " << setw(6) << score;
+	oss.fill(' ');
+	oss << "  Lvl: " << setw(2) << level;
+	oss << "  Lives: " << lives;
+	oss << "  Hlth: " << setw(3) << health * 10 << "%";
+	oss << "  Wtr: " << setw(2) << squirts;
+	oss << "  Gld: " << setw(2) << gold;
+	oss << "  Sonar: " << setw(2) << sonar;
+	oss << "  Oil Left: " << setw(2) << barrelsLeft;
+	string s = oss.str();
+	setGameStatText(s); // calls our provided GameWorld::setGameStatText
+}
+
 Object* StudentWorld::objectCollided(Object* actor, int x, int y)//returns object if overlapping or null if not
 {
 	if (actor == nullptr)

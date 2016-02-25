@@ -51,4 +51,5 @@ private:
 
 /*
 It was ambigious whether to have the guy kill himself immediately without any other actor doing anthign, but the two extra lines of code this needed seem unneccessary
+The math logic was slightly ambigious but i just used general precedence operations
 */

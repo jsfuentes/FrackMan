@@ -126,11 +126,18 @@ Agent::Agent(StudentWorld* world, int startX, int startY, Direction startDir,
 	, m_HP(hitPoints) {}
 
 Protester::Protester(StudentWorld* world, int startX, int startY, int imageID, unsigned int hitPoints,
-	unsigned int score):Agent(world, startX, startY, left, imageID, hitPoints), 
-	m_StepsForward(randInt(8, 60)), m_Leaving(false) {}
+	unsigned int score):Agent(world, startX, startY, left, imageID, hitPoints), m_StepsForward(randInt(8, 60)), 
+	m_Leaving(false), m_WaitingTime(max(0, 3 - (static_cast<int>(getWorld()->getLevel())/4))) {}
+
+void Protester::doSomething() 
+{
+
+}
 
 RegularProtester::RegularProtester(StudentWorld* world, int startX, int startY): Protester(
 	world, startX, startY, IID_PROTESTER, 5, 100) {}
+
+
 
 FrackMan::FrackMan(StudentWorld* world, int startX, int startY) : Agent(world, startX, startY, right,
 	IID_PLAYER, 10), m_Gold(0), m_Sonar(1), m_Squirts(5) {}

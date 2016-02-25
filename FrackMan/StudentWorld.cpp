@@ -43,8 +43,8 @@ int StudentWorld::init()
 	int B = min((currentLevel / 2) + 2, 6); //getLevel() returns unsigned int(could produce error for a HUGE level
 	int G = max(5 - (currentLevel) / 2, 2);
 	m_BarrelsLeft = min(2 + currentLevel, 20);
-	m_MaxProtestors = max(25, 200 - currentLevel);
-	m_ProtestorsAddWaitTime = min(15.0, 2 + (currentLevel * 1.5)); //double truncated but its k
+	m_ProtestorsAddWaitTime = max(25, 200 - currentLevel);
+	m_MaxProtestors = min(15.0, 2 + (currentLevel * 1.5)); //double truncated but its k
 	m_currentProtestors = 0;
 	m_currentTimeSinceAdd = -1;
 	for (int column = 0; column < 64; column++)
@@ -139,7 +139,7 @@ int StudentWorld::move()
 			int probOfHardcore = min(90, (static_cast<int>(getLevel()) * 10) + 30);
 			if (randInt(1, 100) <= probOfHardcore)
 			{
-
+				cout << "NOOOB";
 			}
 			else
 				addActor(RegularProtester_);

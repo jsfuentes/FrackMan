@@ -61,13 +61,18 @@ GoldNugget::GoldNugget(StudentWorld* world, int startX, int startY, bool tempora
 	!temporary, temporary, temporary, temporary ? 25 : 10) {}
 
 void GoldNugget::activate() 
-{}
+{
+	if (activatesOnPlayer())
+		getWorld()->giveFrackMan(StudentWorld::ObjectName::Gold_);
+	else
+	{
+
+	}
+}
 
 OilBarrel::OilBarrel(StudentWorld* world, int startX, int startY) : ActivatingObject(world,
 	startX, startY, IID_BARREL, SOUND_FOUND_OIL, true, false, false, 1000) {}
 
-void OilBarrel::activate()
-{}
 
 Boulder::Boulder(StudentWorld* world, int startX, int startY): Object(world, IID_BOULDER, 
 	startX, startY, down, 1.0, 1), delayCounter(0), isStable(true)
@@ -161,7 +166,20 @@ void FrackMan::doSomething()
 			kill();
 			break;
 		case KEY_PRESS_SPACE:
+		case 'Z':
+		case 'z':
+			if (m_Sonar > 0)
+			{
+				getWorld()->revealAllNearbyObjects(getX(), getY(), 12);
+				m_Sonar--;
+			}
+			break;
 		case KEY_PRESS_TAB:
+			if (m_Gold > 0)
+			{
+				m_Gold--;
+			}
+			break;
 		default:
 			break;
 		}

@@ -50,7 +50,7 @@ public:
 		int ptsWhenAct = 0);
 	void playSound();
 	virtual void doSomething(); //general actions to take(look for Frackman or Protestor)
-	virtual void activate() = 0; //specific actions to take
+	virtual void activate() {}; //specific actions to take
 	void setTicksToLive(int ticksLeft) { m_ticksLeft = ticksLeft; };
 	bool activatesOnPlayer() { return m_actOnPlayer; };
 private:
@@ -80,7 +80,6 @@ class OilBarrel : public ActivatingObject
 {
 public:
 	OilBarrel(StudentWorld* world, int startX, int startY);
-	virtual void activate();
 	virtual bool needsToBePickedUpToFinishLevel() const { return true; };
 private:
 };
@@ -110,7 +109,9 @@ public:
 	~FrackMan() {};
 	void doSomething();
 	bool canDigThroughDirt() const{ return true; };
-	virtual void addGold() {};
+	virtual void addGold() { m_Gold++; };
+	void addSonar() { m_Sonar++; };
+	void addWater() { m_Squirts++; };
 	int getGold() const { return m_Gold; };
 	int getSonar() const { return m_Sonar; };
 	int getWater() const { return m_Squirts; };

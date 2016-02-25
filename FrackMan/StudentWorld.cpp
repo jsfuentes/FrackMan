@@ -182,6 +182,16 @@ void StudentWorld::cleanUp()
 ///////////////////////////////////
 /////HELPER FUNCTIONS
 //////////////////////////////////
+void StudentWorld::giveFrackMan(ObjectName objectName)
+{
+	if (Gold_)
+		m_FrackMan->addGold();
+	else if (Sonar_)
+		m_FrackMan->addSonar();
+	else if (Water_)
+		m_FrackMan->addWater();
+}
+
 void StudentWorld::revealAllNearbyObjects(int x, int y, int radius)
 {
 	for (vector<Object*>::iterator it = m_Actors.begin(); it != m_Actors.end(); it++)

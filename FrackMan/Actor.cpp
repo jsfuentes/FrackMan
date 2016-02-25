@@ -158,6 +158,8 @@ void FrackMan::doSomething()
 				moveTo(getX(), getY());
 			break;
 		case KEY_PRESS_ESCAPE:
+			kill();
+			break;
 		case KEY_PRESS_SPACE:
 		case KEY_PRESS_TAB:
 		default:

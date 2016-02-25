@@ -135,7 +135,11 @@ int StudentWorld::move()
 	revealAllNearbyObjects(m_FrackMan->getX(), m_FrackMan->getY(), 4);
 	vector<Object*>::iterator it = m_Actors.begin();
 	for (; it != m_Actors.end(); it++)
+	{
 		(*it)->doSomething();
+		if (!m_FrackMan->isAlive())
+			return GWSTATUS_PLAYER_DIED; 
+	}
 	it = m_Actors.begin(); //deletion
 	while(it != m_Actors.end()) 
 	{

@@ -130,8 +130,8 @@ int StudentWorld::move()
 		else
 			addActor(Water_);
 	}
-	m_FrackMan->doSomething(); //action
 	clearDirt(m_FrackMan->getX(), m_FrackMan->getY(), true);
+	m_FrackMan->doSomething(); //action
 	revealAllNearbyObjects(m_FrackMan->getX(), m_FrackMan->getY(), 4);
 	vector<Object*>::iterator it = m_Actors.begin();
 	for (; it != m_Actors.end(); it++)
@@ -264,11 +264,6 @@ double StudentWorld::distanceBetween(Object* a1, int x, int y) const
 //////////////////////////
 void StudentWorld::setDisplayText()
 {
-	int health = 0;
-	int squirts = 0;
-	int gold = 0;
-	int sonar = 0;
-	int barrelsLeft = m_BarrelsLeft;
 	ostringstream oss;
 	oss.setf(ios::fixed);
 	oss.precision(0);
@@ -277,11 +272,11 @@ void StudentWorld::setDisplayText()
 	oss.fill(' ');
 	oss << "  Lvl: " << setw(2) << getLevel();
 	oss << "  Lives: " << getLives();
-	oss << "  Hlth: " << setw(3) << health * 10 << "%";
-	oss << "  Wtr: " << setw(2) << squirts;
-	oss << "  Gld: " << setw(2) << gold;
-	oss << "  Sonar: " << setw(2) << sonar;
-	oss << "  Oil Left: " << setw(2) << barrelsLeft;
+	oss << "  Hlth: " << setw(3) << m_FrackMan->getHP() * 10 << "%";
+	oss << "  Wtr: " << setw(2) << m_FrackMan->getWater();
+	oss << "  Gld: " << setw(2) << m_FrackMan->getGold();
+	oss << "  Sonar: " << setw(2) << m_FrackMan->getSonar();
+	oss << "  Oil Left: " << setw(2) << m_BarrelsLeft;
 	string s = oss.str();
 	setGameStatText(s); // calls our provided GameWorld::setGameStatText
 }

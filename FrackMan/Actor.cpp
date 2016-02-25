@@ -118,6 +118,8 @@ FrackMan::FrackMan(StudentWorld* world, int startX, int startY) : Agent(world, s
 
 void FrackMan::doSomething()
 {
+	if (!isAlive())
+		return;
 	int ch;
 	if (getWorld()->getKey(ch) == true)
 	{

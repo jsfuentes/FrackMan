@@ -97,7 +97,7 @@ class Agent : public Object
 public:
 	Agent(StudentWorld* world, int startX, int startY, Direction startDir,
 		int imageID, unsigned int hitPoints);
-	unsigned int getHitPoints() const { return m_HP; };
+	unsigned int getHP() const { return m_HP; };
 	virtual void addGold() = 0;
 private:
 	unsigned int m_HP;
@@ -111,6 +111,9 @@ public:
 	void doSomething();
 	bool canDigThroughDirt() const{ return true; };
 	virtual void addGold() {};
+	int getGold() const { return m_Gold; };
+	int getSonar() const { return m_Sonar; };
+	int getWater() const { return m_Squirts; };
 	
 private:
 	int m_Squirts;

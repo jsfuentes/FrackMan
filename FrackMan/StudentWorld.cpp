@@ -123,7 +123,7 @@ int StudentWorld::move()
 {
 	setDisplayText();
 	int G = getLevel() * 25 + 300; //new Goodie chance is 1/G
-	if (randInt(1, G) == 1)//insertion
+	if (randInt(1, 20) == 1)//insertion
 	{
 		if (randInt(1, 5) == 1)
 			addActor(Sonar_);
@@ -184,11 +184,11 @@ void StudentWorld::cleanUp()
 //////////////////////////////////
 void StudentWorld::giveFrackMan(ObjectName objectName)
 {
-	if (Gold_)
+	if (objectName == Gold_)
 		m_FrackMan->addGold();
-	else if (Sonar_)
+	else if (objectName == Sonar_)
 		m_FrackMan->addSonar();
-	else if (Water_)
+	else if (objectName == Water_)
 		m_FrackMan->addWater();
 }
 

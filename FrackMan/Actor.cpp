@@ -53,8 +53,18 @@ void ActivatingObject::doSomething()
 WaterPool::WaterPool(StudentWorld* world, int startX, int startY):ActivatingObject(world, startX, 
 	startY, IID_WATER_POOL, SOUND_GOT_GOODIE, true, false, true, 100) {}
 
+void WaterPool::activate()
+{
+	getWorld()->giveFrackMan(StudentWorld::ObjectName::Water_);
+}
+
 SonarKit::SonarKit(StudentWorld* world, int startX, int startY): ActivatingObject(world, startX, 
 	startY, IID_SONAR, SOUND_GOT_GOODIE, true, false, true, 75) {}
+
+void SonarKit::activate()
+{
+	getWorld()->giveFrackMan(StudentWorld::ObjectName::Sonar_);
+}
 
 GoldNugget::GoldNugget(StudentWorld* world, int startX, int startY, bool temporary):ActivatingObject(
 	world, startX, startY, IID_GOLD, temporary? SOUND_PROTESTER_FOUND_GOLD: SOUND_GOT_GOODIE, 

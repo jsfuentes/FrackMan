@@ -157,6 +157,7 @@ Protester::Protester(StudentWorld* world, int startX, int startY, int imageID, i
 	m_TimeSinceShout(15), m_TimeSincePerp(200)
 {
 	m_CurrentWaitTime = m_MaxWaitingTime; //so immediately acts
+	getWorld()->determineFirstMoveToExit(this, getX(), getY());
 }
 
 void Protester::doSomething() 
@@ -169,89 +170,97 @@ void Protester::doSomething()
 	if (m_CurrentWaitTime >= m_MaxWaitingTime)
 	{
 		m_CurrentWaitTime = 0;
-		Object* MrFrack = getWorld()->findNearbyFrackMan(this, 4);
-		if (MrFrack != nullptr && getWorld()->facingTowardFrackMan(this) && m_TimeSinceShout++ >= 15) //increments timesince shout here
+		if (m_Leaving)
 		{
-			getWorld()->playSound(SOUND_PROTESTER_YELL);
-			MrFrack->annoy(2);
-			m_TimeSinceShout = 0;
-			return;
+			if (getX() == 60 && getY() == 60)
+				kill();
 		}
-		else if (MrFrack == nullptr)
-		{	
-			Direction baseDir = getDirection();
-			Direction toFrack = none;
-			for (int dir = right; dir > 0; dir--)
+		else
+		{
+			Object* MrFrack = getWorld()->findNearbyFrackMan(this, 4);
+			if (MrFrack != nullptr && getWorld()->facingTowardFrackMan(this) && m_TimeSinceShout++ >= 15) //increments timesince shout here
 			{
-				setDirection(static_cast<Direction>(dir));
-				if (getWorld()->facingTowardFrackMan(this))
-				{
-					toFrack = static_cast<Direction>(dir);
-					break; //will be facing correct Direction
-				}
-				setDirection(baseDir);
+				getWorld()->playSound(SOUND_PROTESTER_YELL);
+				MrFrack->annoy(2);
+				m_TimeSinceShout = 0;
+				return;
 			}
-			if (toFrack != none)
+			else if (MrFrack == nullptr)
 			{
+				Direction baseDir = getDirection();
+				Direction toFrack = none;
+				for (int dir = right; dir > 0; dir--)
+				{
+					setDirection(static_cast<Direction>(dir));
+					if (getWorld()->facingTowardFrackMan(this))
+					{
+						toFrack = static_cast<Direction>(dir);
+						break; //will be facing correct Direction
+					}
+					setDirection(baseDir);
+				}
+				if (toFrack != none)
+				{
 
-				m_StepsForward = 0;
-			}
-			else if(--m_StepsForward <= 0)
-			{
-				int x, y;
-				do
-				{
-					Direction randDir = static_cast<Direction>(randInt(1, 4));
-					setDirection(randDir);
-					x = getX();
-					y = getY();
-					coordinatesIfMoved(randDir, x, y);
-				} while (!getWorld()->canActorMoveTo(this, x, y));
-				m_StepsForward = randInt(8, 60);
-			}
-			else if(m_TimeSincePerp++ >= 200 )
-			{
-				int x, y;
-				Direction initialDir = getDirection();
-				x = getX();
-				y = getY();
-				coordinatesIfMoved(initialDir, x, y); //if it changes x, only care about the y's and viceversa
-				if (x != getX())
-				{
-					bool canGoUp = getWorld()->canActorMoveTo(this, getX(), getY() + 1);
-					bool canGoDown = getWorld()->canActorMoveTo(this, getX(), getY() - 1);
-					if (canGoUp && canGoDown)
-						setDirection(randInt(1, 2) == 1 ? up : down);
-					else if (canGoUp)
-						setDirection(up);
-					else if (canGoDown)
-						setDirection(down);
+					m_StepsForward = 0;
 				}
-				else if (y != getY())
+				else if (--m_StepsForward <= 0)
 				{
-					bool canGoLeft = getWorld()->canActorMoveTo(this, getX() -1, getY());
-					bool canGoRight = getWorld()->canActorMoveTo(this, getX() + 1, getY());
-					if (canGoLeft && canGoRight)
-						setDirection(randInt(1, 2) == 1 ? left : right);
-					else if (canGoLeft)
-						setDirection(left);
-					else if (canGoRight)
-						setDirection(right);
-				}
-				if (initialDir != getDirection())
-				{
-					m_TimeSincePerp = 0;
+					int x, y;
+					do
+					{
+						Direction randDir = static_cast<Direction>(randInt(1, 4));
+						setDirection(randDir);
+						x = getX();
+						y = getY();
+						coordinatesIfMoved(randDir, x, y);
+					} while (!getWorld()->canActorMoveTo(this, x, y));
 					m_StepsForward = randInt(8, 60);
 				}
+				else if (m_TimeSincePerp++ >= 200)
+				{
+					int x, y;
+					Direction initialDir = getDirection();
+					x = getX();
+					y = getY();
+					coordinatesIfMoved(initialDir, x, y); //if it changes x, only care about the y's and viceversa
+					if (x != getX())
+					{
+						bool canGoUp = getWorld()->canActorMoveTo(this, getX(), getY() + 1);
+						bool canGoDown = getWorld()->canActorMoveTo(this, getX(), getY() - 1);
+						if (canGoUp && canGoDown)
+							setDirection(randInt(1, 2) == 1 ? up : down);
+						else if (canGoUp)
+							setDirection(up);
+						else if (canGoDown)
+							setDirection(down);
+					}
+					else if (y != getY())
+					{
+						bool canGoLeft = getWorld()->canActorMoveTo(this, getX() - 1, getY());
+						bool canGoRight = getWorld()->canActorMoveTo(this, getX() + 1, getY());
+						if (canGoLeft && canGoRight)
+							setDirection(randInt(1, 2) == 1 ? left : right);
+						else if (canGoLeft)
+							setDirection(left);
+						else if (canGoRight)
+							setDirection(right);
+					}
+					if (initialDir != getDirection())
+					{
+						m_TimeSincePerp = 0;
+						m_StepsForward = randInt(8, 60);
+					}
+				}
+				int x, y;
+				x = getX();
+				y = getY();
+				coordinatesIfMoved(getDirection(), x, y);
+				if (getWorld()->canActorMoveTo(this, x, y))
+					moveTo(x, y);
+				else
+					m_StepsForward = 0;
 			}
-			int x, y;
-			x = getX();
-			y = getY();
-			coordinatesIfMoved(getDirection(), x, y);
-			if (getWorld()->canActorMoveTo(this, x, y))
-				moveTo(x, y);
-			else
-				m_StepsForward = 0;
 		}
 	}
 	else
@@ -276,6 +285,7 @@ bool Protester::annoy(int amount)
 			getWorld()->playSound(SOUND_PROTESTER_ANNOYED);
 			m_CurrentWaitTime = m_MaxWaitingTime - max(50, 100 - (static_cast<int>(getWorld()->getLevel()) * 10));
 		}
+		return true;
 	}
 	else
 		return false;
@@ -346,6 +356,7 @@ void FrackMan::doSomething()
 			if (m_Squirts > 0)
 			{
 				getWorld()->addActor(StudentWorld::ObjectName::Squirt_);
+				getWorld()->playSound(SOUND_PLAYER_SQUIRT);
 				m_Squirts--;
 			}
 			break;

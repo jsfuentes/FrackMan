@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <sstream>
 #include <iomanip>
+#include <queue>
 using namespace std;
 
 ///////////////////////
@@ -39,6 +40,9 @@ StudentWorld::~StudentWorld()
 
 int StudentWorld::init()
 {
+	for (int i = 0; i < 64; i++)
+		for (int j = 0; j < 64; j++)
+			m_DistanceToExit[i][j] = -1; // fill maze solving with -1 to indicate unsolved
 	int currentLevel = static_cast<int>(getLevel());
 	int B = min((currentLevel / 2) + 2, 6); //getLevel() returns unsigned int(could produce error for a HUGE level
 	int G = max(5 - (currentLevel) / 2, 2);
@@ -214,6 +218,72 @@ void StudentWorld::cleanUp()
 ///////////////////////////////////
 /////HELPER FUNCTIONS
 //////////////////////////////////
+int StudentWorld::determineFirstMoveToExit(Object* p1, int x, int y)
+{
+	struct Coord
+	{
+		Coord(int x, int y) {
+			m_x = x; 
+			m_y = y;
+		};
+		int m_x;
+		int m_y;
+	};
+	queue<Coord> qC;
+	Coord c(60, 60);
+	qC.push(c);
+	int stepsToExit = 0;
+	int nextRound = 0;
+	int currentRound = 0;
+	bool newRound = true;
+	while (!qC.empty())
+	{
+		if (currentRound == 0)
+		{
+			currentRound = nextRound;
+			nextRound = 0;
+			stepsToExit++;
+		}
+		else
+			currentRound--;
+		Coord currentC = qC.front();
+		qC.pop();
+		for (int dir = GraphObject::Direction::right; dir > 0; dir--)
+		{
+			int currentX = currentC.m_x;
+			int currentY = currentC.m_y;
+			m_FrackMan->coordinatesIfMoved(static_cast<GraphObject::Direction>(dir), currentX, currentY);
+			if (canActorMoveTo(p1, currentX, currentY) && m_DistanceToExit[currentX][currentY] == -1)
+			{
+				if (newRound)
+					currentRound++;
+				else
+					nextRound++;
+				qC.push(Coord(currentX, currentY));
+				m_DistanceToExit[currentX][currentY] = stepsToExit;
+			}
+		}
+		if (newRound)
+			newRound = false;
+	}
+	for (int j = 63; j >= 0; j--)
+	{
+		for (int i = 0; i < 64; i++)	
+			cout << m_DistanceToExit[i][j] << " ";
+		cout << endl;
+	}
+	/*int lowestDistance = m_DistanceToExit
+	for (int dir = GraphObject::Direction::right; dir > 0; dir--)
+	{
+		int tempX = x;
+		int tempY = y;
+		m_FrackMan->coordinatesIfMoved(static_cast<GraphObject::Direction>(dir), tempX, tempY);
+		if (m_DistanceToExit[tempX, tempY])
+	}
+	*/
+	return GraphObject::Direction::down;
+}
+
 int StudentWorld::annoyAllNearbyAgents(Object* annoyer, int points, int radius)
 {
 	int counter = 0;

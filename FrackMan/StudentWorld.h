@@ -36,11 +36,13 @@ public:
 	void clearDirt(int x, int y, bool sound); //given the actors coordinates delete all dirt in 4x4
 	double distanceBetween(Object* a1, int x, int y) const;
 	Object* objectCollided(Object* actor, int x, int y);
+	int determineFirstMoveToExit(Object* p1, int x, int y);
 
 private:
 	void setDisplayText();
 	bool withinMineShaft(int x, int y);
 	bool closeToObjects(int x, int y);
+	int m_DistanceToExit[64][64];
 	Dirt* m_Dirt[64][64];
 	std::vector <Object*> m_Actors;
 	FrackMan* m_FrackMan;

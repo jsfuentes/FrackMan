@@ -204,6 +204,24 @@ void StudentWorld::cleanUp()
 ///////////////////////////////////
 /////HELPER FUNCTIONS
 //////////////////////////////////
+bool StudentWorld::facingTowardFrackMan(Object* a)
+{
+	GraphObject::Direction dir = a->getDirection();
+	switch (dir)
+	{
+	case GraphObject::Direction::down:
+		for (int i = 0; canActorMoveTo(m_FrackMan, a->getX(), a->getY() - i); i++) //can Actor Move To checks if location within bounds
+			if (distanceBetween(m_FrackMan, a->getX(), a->getY() - i) < 4)
+				return true;
+		return false;
+		break;
+	case GraphObject::Direction::up:
+	case GraphObject::Direction::right:
+	case GraphObject::Direction::left:
+		break;
+	}
+}
+
 void StudentWorld::giveFrackMan(ObjectName objectName)
 {
 	if (objectName == Gold_)
@@ -253,11 +271,13 @@ bool StudentWorld::canActorMoveTo(Object* a, int x, int y)
 			return false;
 	else
 	{
+		bool canMove = true;
 		Object* intersectingA = objectCollided(a, x, y);
-		if (intersectingA == nullptr)
-			return true;
-		else
-			return intersectingA->canActorsPassThroughMe();
+		if (intersectingA != nullptr)
+			canMove = intersectingA->canActorsPassThroughMe();
+		if (!a->canDigThroughDirt())
+			canMove = !isDirtAround(x, y);
+		return canMove;
 	}
 }
 

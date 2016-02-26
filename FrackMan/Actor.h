@@ -141,7 +141,8 @@ public:
 private:
 	bool m_Leaving;
 	int m_StepsForward;
-	int m_WaitingTime;
+	int m_MaxWaitingTime;
+	int m_CurrentWaitTime;
 	int m_TimeSincePerp;
 };
 

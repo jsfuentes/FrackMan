@@ -25,6 +25,7 @@ public:
 	void giveFrackMan(ObjectName objectName);
 	void revealAllNearbyObjects(int x, int y, int radius);
 	Object* findNearbyFrackMan(Object* a, int radius) const; //In man is within radius, return him if not null 
+	bool facingTowardFrackMan(Object* a);
 	void addActor(ObjectName objectName, int number = 1); // adds object base on enumerator
 	bool canActorMoveTo(Object* a, int x, int y); //checks boundaries and boulders
 	bool isDirtAt(int x, int y);

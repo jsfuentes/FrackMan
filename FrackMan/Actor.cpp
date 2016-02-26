@@ -127,11 +127,23 @@ Agent::Agent(StudentWorld* world, int startX, int startY, Direction startDir,
 
 Protester::Protester(StudentWorld* world, int startX, int startY, int imageID, unsigned int hitPoints,
 	unsigned int score):Agent(world, startX, startY, left, imageID, hitPoints), m_StepsForward(randInt(8, 60)), 
-	m_Leaving(false), m_WaitingTime(max(0, 3 - (static_cast<int>(getWorld()->getLevel())/4))) {}
+	m_Leaving(false), m_MaxWaitingTime(max(0, 3 - (static_cast<int>(getWorld()->getLevel())/4)))
+{
+	m_CurrentWaitTime = m_MaxWaitingTime; //so immediately acts
+}
 
 void Protester::doSomething() 
 {
+	if (m_CurrentWaitTime >= m_MaxWaitingTime)
+	{
+		Object* MrFrack = getWorld()->findNearbyFrackMan(this, 3);
+		if (MrFrack != nullptr)
+		{
 
+		}
+	}
+	else
+		m_CurrentWaitTime++;
 }
 
 RegularProtester::RegularProtester(StudentWorld* world, int startX, int startY): Protester(

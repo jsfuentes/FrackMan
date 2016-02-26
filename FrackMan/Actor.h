@@ -13,6 +13,7 @@ public:
 	virtual void coordinatesIfMoved(Direction dir, int& x, int& y);
 	virtual bool canDigThroughDirt() const { return false; };
 	virtual bool canActorsPassThroughMe() const { return true; };
+	virtual bool canPickThingsUp() const { return false; };
 	virtual bool needsToBePickedUpToFinishLevel() const { return false; };
 	virtual bool annoy(int amount) { return false; };
 	StudentWorld* getWorld() { return m_world; };
@@ -100,6 +101,7 @@ public:
 	Agent(StudentWorld* world, int startX, int startY, Direction startDir,
 		int imageID, unsigned int hitPoints);
 	virtual ~Agent() {};
+	virtual bool canPickThingsUp() const { return true; };
 	virtual bool annoy(int amount) { m_HP -= amount;  return true; };
 	int getHP() const { return m_HP; };
 	virtual void addGold() = 0;

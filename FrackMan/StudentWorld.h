@@ -16,7 +16,7 @@ int randInt(int min, int max); //at bottom of StudentWorld
 class StudentWorld : public GameWorld
 {
 public:
-	enum ObjectName { FrackMan_, Boulder_, Oil_, Gold_, Sonar_, Water_, RegularProtester_};
+	enum ObjectName { FrackMan_, Boulder_, Oil_, Gold_, Sonar_, Water_, RegularProtester_, DroppedGold_};
 	StudentWorld(std::string assetDir);
 	~StudentWorld();
 	virtual int init();
@@ -26,6 +26,7 @@ public:
 	void giveFrackMan(ObjectName objectName);
 	void revealAllNearbyObjects(int x, int y, int radius);
 	Object* findNearbyFrackMan(Object* a, int radius) const; //In man is within radius, return him if not null 
+	Object* findNearbyProtestor(Object* a, int radius);
 	bool facingTowardFrackMan(Object* a);
 	void addActor(ObjectName objectName, int number = 1); // adds object base on enumerator
 	bool canActorMoveTo(Object* a, int x, int y); //checks boundaries and boulders

@@ -49,6 +49,7 @@ void ActivatingObject::doSomething()
 	{
 		if(m_ticksLeft-- == 0)
 			kill();
+
 	}
 }
 
@@ -105,7 +106,7 @@ void Boulder::doSomething()
 				moveTo(getX(), getY() - 1);
 			else
 				kill();
-			getWorld()->annoyAllNearbyAgents(this, 100, 3);
+			getWorld()->increaseScore(getWorld()->annoyAllNearbyAgents(this, 100, 3)*500);
 		}
 	}
 }
@@ -306,6 +307,7 @@ void FrackMan::doSomething()
 		case KEY_PRESS_TAB:
 			if (m_Gold > 0)
 			{
+				getWorld()->addActor(StudentWorld::ObjectName::DroppedGold_);
 				m_Gold--;
 			}
 			break;

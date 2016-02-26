@@ -82,12 +82,17 @@ void StudentWorld::addActor(ObjectName objectName, int number)
 			Object* regPro = new RegularProtester(this, 60, 60);
 			m_Actors.push_back(regPro);
 		}
-		if (objectName == Sonar_)
+		else if (objectName == DroppedGold_)
+		{
+			Object* doppy = new GoldNugget(this, m_FrackMan->getX(), m_FrackMan->getY(), true);
+			m_Actors.push_back(doppy);
+		}
+		else if (objectName == Sonar_)
 		{
 			Object* sony = new SonarKit(this, 0, 60);
 			m_Actors.push_back(sony);
 		}
-		if (objectName == Water_)
+		else if (objectName == Water_)
 		{
 			do {
 				x = randInt(0, 60); //60 because images location decided by bottomleft corner
@@ -315,6 +320,15 @@ bool StudentWorld::canActorMoveTo(Object* a, int x, int y)
 Object* StudentWorld::findNearbyFrackMan(Object* a, int radius) const
 {
 	return ((distanceBetween(m_FrackMan, a->getX(), a->getY())) <= radius ? m_FrackMan : nullptr);
+}
+
+Object* StudentWorld::findNearbyProtestor(Object* a, int radius)
+{
+	for (vector<Object*>::iterator it = m_Actors.begin(); it != m_Actors.end(); it++)
+	{
+		if ((*it)->canPickThingsUp() && distanceBetween(*it, a->getX(), a->getY()) < radius)
+			return *it;
+	}
 }
 
 bool StudentWorld::isDirtAt(int x, int y)

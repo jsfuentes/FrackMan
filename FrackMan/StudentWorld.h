@@ -17,7 +17,7 @@ int randInt(int min, int max); //at bottom of StudentWorld
 class StudentWorld : public GameWorld
 {
 public:
-	enum ObjectName { FrackMan_, Boulder_, Oil_, Gold_, Sonar_, Water_, RegularProtester_, DroppedGold_};
+	enum ObjectName { FrackMan_, Boulder_, Oil_, Gold_, Sonar_, Water_, RegularProtester_, DroppedGold_, Squirt_};
 	StudentWorld(std::string assetDir);
 	~StudentWorld();
 	virtual int init();

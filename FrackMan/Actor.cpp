@@ -9,8 +9,6 @@ Object::Object(StudentWorld* world, int imageID, int startX, int startY, Directi
 	setVisible(true);
 }
 
-
-
 ActivatingObject::ActivatingObject(StudentWorld* world, int startX, int startY, int imageID, 
 	int soundToPlay, bool actOnPlayer, bool actOnProtester, bool initallyActive, int ptsWhenAct) : 
 	Object(world, imageID, startX, startY, right, 1.0, 2), m_soundToPlay(soundToPlay), 
@@ -86,6 +84,33 @@ OilBarrel::OilBarrel(StudentWorld* world, int startX, int startY) : ActivatingOb
 	startX, startY, IID_BARREL, SOUND_FOUND_OIL, true, false, false, 1000) {}
 
 
+Squirt::Squirt(StudentWorld* world, int startX, int startY, Direction startDir) : Object(world,
+	IID_WATER_SPURT, startX, startY, startDir, 1.0, 1), m_distanceToTravel(4) {}
+
+void Squirt::doSomething() 
+{
+	Object* nearbyPro = getWorld()->findNearbyProtestor(this, 3);
+	if (nearbyPro != nullptr)
+	{
+		nearbyPro->annoy(2);
+		kill();
+	}
+	else if (m_distanceToTravel-- <= 0)
+		kill();
+	else
+	{
+		int x = getX();
+		int y = getY();
+		coordinatesIfMoved(getDirection(), x, y);
+		if (getWorld()->canActorMoveTo(this, x, y))
+		{
+			moveTo(x, y);
+		}
+		else
+			kill();
+	}
+
+}
 Boulder::Boulder(StudentWorld* world, int startX, int startY): Object(world, IID_BOULDER, 
 	startX, startY, down, 1.0, 1), delayCounter(0), isStable(true) {}
 
@@ -297,6 +322,7 @@ void FrackMan::doSomething()
 		case KEY_PRESS_SPACE:
 			if (m_Squirts > 0)
 			{
+				getWorld()->addActor(StudentWorld::ObjectName::Squirt_);
 				m_Squirts--;
 			}
 			break;

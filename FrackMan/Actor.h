@@ -25,6 +25,15 @@ private:
 	bool m_isAlive;
 };
 
+class Squirt : public Object
+{
+public:
+	Squirt(StudentWorld* world, int startX, int startY, Direction startDir);
+	virtual void doSomething();
+private:
+	int m_distanceToTravel;
+};
+
 class Boulder : public Object
 {
 public:

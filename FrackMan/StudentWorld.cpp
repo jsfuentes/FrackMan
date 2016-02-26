@@ -82,6 +82,11 @@ void StudentWorld::addActor(ObjectName objectName, int number)
 			Object* regPro = new RegularProtester(this, 60, 60);
 			m_Actors.push_back(regPro);
 		}
+		else if (objectName == Squirt_)
+		{
+			Object* squirty = new Squirt(this, m_FrackMan->getX(), m_FrackMan->getY(), m_FrackMan->getDirection());
+			m_Actors.push_back(squirty);
+		}
 		else if (objectName == DroppedGold_)
 		{
 			Object* doppy = new GoldNugget(this, m_FrackMan->getX(), m_FrackMan->getY(), true);
@@ -329,7 +334,7 @@ Object* StudentWorld::findNearbyProtestor(Object* a, int radius)
 	for (vector<Object*>::iterator it = m_Actors.begin(); it != m_Actors.end(); it++)
 	{
 		if ((*it)->canPickThingsUp() && distanceBetween(*it, a->getX(), a->getY()) < radius)
-			return *it;
+			return *it; //returns first protestor it finds, so only he gets the gold
 	}
 	return nullptr;
 }

@@ -148,12 +148,12 @@ public:
 	virtual bool annoy(int amount);
 	virtual void doSomething();
 	virtual void addGold();
+	virtual bool tryToBeHardCore() { return false; };
 	virtual bool huntsFrackMan() const { return true; };
 	virtual bool canPickThingsUp() const { return !m_Leaving; }
 	// Set state to having given up protest
 	void setMustLeaveOilField() { m_Leaving = true; };
 	// Set number of ticks until next move
-	void setTicksToNextMove() {};
 private:
 	bool m_Leaving;
 	bool m_firstMoveToLeave;
@@ -162,11 +162,20 @@ private:
 	int m_CurrentWaitTime;
 	int m_TimeSincePerp;
 	int m_TimeSinceShout;
+	int m_ScoreIfShot; //also differentiater for hardcore and regular protester
 };
 
 class RegularProtester : public Protester
 {
 public:
 	RegularProtester(StudentWorld* world, int startX, int startY);
+};
+
+class HardcoreProtester : public Protester
+{
+public:
+	HardcoreProtester(StudentWorld* world, int startX, int startY);
+	virtual bool TryToBeHardcore() { return true; };
+	virtual void addGold() {};
 };
 #endif //Actor.h

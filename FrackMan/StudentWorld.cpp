@@ -222,7 +222,7 @@ void StudentWorld::cleanUp()
 ///////////////////////////////////
 /////HELPER FUNCTIONS
 //////////////////////////////////
-int StudentWorld::determineFirstMoveToExit(Object* p1, int x, int y)
+int StudentWorld::determineFirstMoveTo(Object* p1, int x, int y, bool toFrackMan)
 {
 	for (int i = 0; i < 64; i++)
 		for (int j = 0; j < 64; j++)
@@ -279,10 +279,10 @@ int StudentWorld::determineFirstMoveToExit(Object* p1, int x, int y)
 			cout << m_DistanceToExit[i][j] << " ";
 		cout << endl;
 	}*/
-	return determineDirToExit(p1, x, y);
+	return determineDirTo(x, y);
 }
 
-int StudentWorld::determineDirToExit(Object* p1, int x, int y)
+int StudentWorld::determineDirTo(int x, int y, bool toFrackMan)
 {
 	int lowestDistance = m_DistanceToExit[x][y];
 	int bestDir = 0;

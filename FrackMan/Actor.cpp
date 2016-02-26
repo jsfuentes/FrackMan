@@ -154,7 +154,7 @@ Agent::Agent(StudentWorld* world, int startX, int startY, Direction startDir,
 Protester::Protester(StudentWorld* world, int startX, int startY, int imageID, int hitPoints,
 	unsigned int score):Agent(world, startX, startY, left, imageID, hitPoints), m_StepsForward(randInt(8, 60)), 
 	m_Leaving(false), m_MaxWaitingTime(max(0, 3 - (static_cast<int>(getWorld()->getLevel())/4))), 
-	m_TimeSinceShout(15), m_TimeSincePerp(200), m_firstMoveToLeave(true)
+	m_TimeSinceShout(15), m_TimeSincePerp(200), m_firstMoveToLeave(true), m_ScoreIfShot(score)
 {
 	m_CurrentWaitTime = m_MaxWaitingTime; //so immediately acts
 }
@@ -174,9 +174,9 @@ void Protester::doSomething()
 				return;
 			}
 			else if (m_firstMoveToLeave)
-				setDirection(static_cast<Direction>(getWorld()->determineFirstMoveToExit(this, getX(), getY())));
+				setDirection(static_cast<Direction>(getWorld()->determineFirstMoveTo(this, getX(), getY())));
 			else
-				setDirection(static_cast<Direction>(getWorld()->determineDirToExit(this, getX(), getY())));
+				setDirection(static_cast<Direction>(getWorld()->determineDirTo(getX(), getY())));
 		}
 		else
 		{
@@ -188,6 +188,7 @@ void Protester::doSomething()
 				m_TimeSinceShout = 0;
 				return;
 			}
+			else if (tryToBeHardCore()) {}
 			else if (MrFrack == nullptr)
 			{
 				Direction baseDir = getDirection();
@@ -204,7 +205,6 @@ void Protester::doSomething()
 				}
 				if (toFrack != none)
 				{
-
 					m_StepsForward = 0;
 				}
 				else if (--m_StepsForward <= 0)
@@ -281,7 +281,7 @@ bool Protester::annoy(int amount)
 			getWorld()->playSound(SOUND_PROTESTER_GIVE_UP);
 			m_CurrentWaitTime = 3; //not 0 but it will act on the next tick for sure
 			if (amount != 100)//not boulder which does its own increase score
-				getWorld()->increaseScore(100);
+				getWorld()->increaseScore(m_ScoreIfShot);
 		}
 		else
 		{
@@ -296,13 +296,14 @@ bool Protester::annoy(int amount)
 
 void Protester::addGold()
 {
-	m_Leaving = true;
+	m_Leaving = true; 
 }
 
 RegularProtester::RegularProtester(StudentWorld* world, int startX, int startY): Protester(
 	world, startX, startY, IID_PROTESTER, 5, 100) {}
 
-
+HardcoreProtester::HardcoreProtester(StudentWorld* world, int startX, int startY) : Protester(
+	world, startX, startY, IID_HARD_CORE_PROTESTER, 20, 250) {}
 
 FrackMan::FrackMan(StudentWorld* world, int startX, int startY) : Agent(world, startX, startY, right,
 	IID_PLAYER, 10), m_Gold(0), m_Sonar(1), m_Squirts(5) {}

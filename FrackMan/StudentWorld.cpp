@@ -83,6 +83,11 @@ void StudentWorld::addActor(ObjectName objectName, int number)
 			Object* regPro = new RegularProtester(this, 60, 60);
 			m_Actors.push_back(regPro);
 		}
+		else if (objectName == HardcoreProtester_)
+		{
+			Object* hardPro = new HardcoreProtester(this, 60, 60);
+			m_Actors.push_back(hardPro);
+		}
 		else if (objectName == Squirt_)
 		{ 
 			x = m_FrackMan->getX();
@@ -156,12 +161,11 @@ int StudentWorld::move()
 		{
 			int probOfHardcore = min(90, (static_cast<int>(getLevel()) * 10) + 30);
 			if (randInt(1, 100) <= probOfHardcore)
-			{
-				cout << "NOOOB";
-			}
+				addActor(HardcoreProtester_);
 			else
 				addActor(RegularProtester_);
 			m_currentTimeSinceAdd = 0;
+			m_currentProtestors++;
 		}
 	if (randInt(1, 100) == 1)//insertion, DONT FORGET TO CHANGE THIS TO G
 	{
@@ -187,6 +191,8 @@ int StudentWorld::move()
 		{
 			if ((*it)->needsToBePickedUpToFinishLevel())
 				m_BarrelsLeft--;
+			if ((*it)->canPickThingsUp()) //protesters are the only object in m_Actors that can pick things up 
+				m_currentProtestors--;
 			delete (*it);
 			it = m_Actors.erase(it);
 		}
@@ -224,76 +230,23 @@ void StudentWorld::cleanUp()
 //////////////////////////////////
 int StudentWorld::determineFirstMoveTo(Object* p1, int x, int y, bool toFrackMan)
 {
-	for (int i = 0; i < 64; i++)
-		for (int j = 0; j < 64; j++)
-			m_DistanceToExit[i][j] = -1; // fill maze solving with -1 to indicate unsolved
-	struct Coord
-	{
-		Coord(int x, int y) {
-			m_x = x; 
-			m_y = y;
-		};
-		int m_x;
-		int m_y;
-	};
-	queue<Coord> qC;
-	Coord c(60, 60);
-	m_DistanceToExit[60][60] = 0;
-	qC.push(c);
-	int stepsToExit = 0;
-	int nextRound = 0;
-	int currentRound = 1;
-	bool newRound = true;
-	while (!qC.empty())
-	{
-		if (--currentRound == 0)
-		{
-			currentRound = nextRound;
-			nextRound = 0;
-			stepsToExit++;
-			newRound = true;
-		}
-		Coord currentC = qC.front();
-		qC.pop();
-		for (int dir = GraphObject::Direction::right; dir > 0; dir--)
-		{
-			int currentX = currentC.m_x;
-			int currentY = currentC.m_y;
-			m_FrackMan->coordinatesIfMoved(static_cast<GraphObject::Direction>(dir), currentX, currentY);
-			if (canActorMoveTo(p1, currentX, currentY) && (m_DistanceToExit[currentX][currentY] == -1))
-			{
-				if (newRound)
-					currentRound++;
-				else
-					nextRound++;
-				qC.push(Coord(currentX, currentY));
-				m_DistanceToExit[currentX][currentY] = stepsToExit;
-			}
-		}
-		if (newRound)
-			newRound = false;
-	}
-	/*for (int j = 63; j >= 0; j--)
-	{
-		for (int i = 0; i < 64; i++)	
-			cout << m_DistanceToExit[i][j] << " ";
-		cout << endl;
-	}*/
+	fillDistanceArrayTo(p1, x, y, toFrackMan);
 	return determineDirTo(x, y);
 }
 
 int StudentWorld::determineDirTo(int x, int y, bool toFrackMan)
 {
-	int lowestDistance = m_DistanceToExit[x][y];
+	int(*a1)[64] = (toFrackMan ? m_DistanceToFrackMan : m_DistanceToExit);
+	int lowestDistance = a1[x][y];
 	int bestDir = 0;
 	for (int dir = GraphObject::Direction::right; dir > 0; dir--)
 	{
 		int tempX = x;
 		int tempY = y;
 		m_FrackMan->coordinatesIfMoved(static_cast<GraphObject::Direction>(dir), tempX, tempY);
-		if (m_DistanceToExit[tempX][tempY] != -1 && m_DistanceToExit[tempX][tempY] <= lowestDistance)
+		if (a1[tempX][tempY] != -1 && a1[tempX][tempY] <= lowestDistance)
 		{
-			lowestDistance = m_DistanceToExit[tempX][tempY];
+			lowestDistance = a1[tempX][tempY];
 			bestDir = dir;
 		}
 	}
@@ -471,6 +424,69 @@ Object* StudentWorld::objectCollided(Object* actor, int x, int y)//returns objec
 ///////////////////////////
 //PRIVATE OR UTILITY FUNCTIONS
 //////////////////////////
+bool StudentWorld::fillDistanceArrayTo(Object* p1, int x, int y, bool toFrackMan)
+{
+	int (*a1)[64] = (toFrackMan? m_DistanceToFrackMan: m_DistanceToExit); //decides array to change
+	for (int i = 0; i < 64; i++)
+		for (int j = 0; j < 64; j++)
+			a1[i][j] = -1; // fill maze solving with -1 to indicate unsolved
+	struct Coord
+	{
+		Coord(int cx, int cy) {
+			m_x = cx;
+			m_y = cy;
+		};
+		int m_x;
+		int m_y;
+	};
+	queue<Coord> qC;
+	Coord c(60, 60);
+	if (toFrackMan)
+	{
+		c.m_x = m_FrackMan->getX();
+		c.m_y = m_FrackMan->getY();
+	}
+	a1[c.m_x][c.m_y] = 0;
+	qC.push(c);
+	int stepsToExit = 0;
+	int nextRound = 0;
+	int currentRound = 1;
+	bool newRound = true;
+	while (!qC.empty())
+	{
+		if (--currentRound == 0)
+		{
+			currentRound = nextRound;
+			nextRound = 0;
+			stepsToExit++;
+			newRound = true;
+		}
+		Coord currentC = qC.front();
+		qC.pop();
+		for (int dir = GraphObject::Direction::right; dir > 0; dir--)
+		{
+			int currentX = currentC.m_x;
+			int currentY = currentC.m_y;
+			m_FrackMan->coordinatesIfMoved(static_cast<GraphObject::Direction>(dir), currentX, currentY);
+			if (canActorMoveTo(p1, currentX, currentY) && (a1[currentX][currentY] == -1))
+			{
+				if (newRound)
+					currentRound++;
+				else
+					nextRound++;
+				qC.push(Coord(currentX, currentY));
+				a1[currentX][currentY] = stepsToExit;
+				if (currentX == x && currentY == y)
+					return true;
+			}
+		}
+		if (newRound)
+			newRound = false;
+	}
+	return false;
+	
+}
+
 void StudentWorld::setDisplayText()
 {
 	ostringstream oss;

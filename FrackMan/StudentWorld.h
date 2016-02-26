@@ -17,7 +17,7 @@ int randInt(int min, int max); //at bottom of StudentWorld
 class StudentWorld : public GameWorld
 {
 public:
-	enum ObjectName { FrackMan_, Boulder_, Oil_, Gold_, Sonar_, Water_, RegularProtester_, DroppedGold_, Squirt_};
+	enum ObjectName { FrackMan_, Boulder_, Oil_, Gold_, Sonar_, Water_, RegularProtester_, DroppedGold_, Squirt_, HardcoreProtester_};
 	StudentWorld(std::string assetDir);
 	~StudentWorld();
 	virtual int init();
@@ -40,11 +40,12 @@ public:
 	int determineDirTo(int x, int y, bool toFrackMan = false);
 	
 private:
-
+	bool fillDistanceArrayTo(Object* p1, int x, int y, bool toFrackMan = false);
 	void setDisplayText();
 	bool withinMineShaft(int x, int y);
 	bool closeToObjects(int x, int y);
-	int m_DistanceToExit[64][64];
+	int m_DistanceToExit[64][64]; 
+	int m_DistanceToFrackMan[64][64];
 	Dirt* m_Dirt[64][64];
 	std::vector <Object*> m_Actors;
 	FrackMan* m_FrackMan;

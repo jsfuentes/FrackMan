@@ -266,12 +266,17 @@ int StudentWorld::determineFirstMoveToExit(Object* p1, int x, int y)
 		if (newRound)
 			newRound = false;
 	}
-	for (int j = 63; j >= 0; j--)
+	/*for (int j = 63; j >= 0; j--)
 	{
 		for (int i = 0; i < 64; i++)	
 			cout << m_DistanceToExit[i][j] << " ";
 		cout << endl;
-	}
+	}*/
+	return determineDirToExit(p1, x, y);
+}
+
+int StudentWorld::determineDirToExit(Object* p1, int x, int y)
+{
 	int lowestDistance = m_DistanceToExit[x][y];
 	int bestDir = 0;
 	for (int dir = GraphObject::Direction::right; dir > 0; dir--)
@@ -279,7 +284,7 @@ int StudentWorld::determineFirstMoveToExit(Object* p1, int x, int y)
 		int tempX = x;
 		int tempY = y;
 		m_FrackMan->coordinatesIfMoved(static_cast<GraphObject::Direction>(dir), tempX, tempY);
-		if (m_DistanceToExit[tempX][tempY] <= lowestDistance)
+		if (m_DistanceToExit[tempX][tempY] != -1 && m_DistanceToExit[tempX][tempY] <= lowestDistance)
 		{
 			lowestDistance = m_DistanceToExit[tempX][tempY];
 			bestDir = dir;

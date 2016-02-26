@@ -37,6 +37,7 @@ public:
 	double distanceBetween(Object* a1, int x, int y) const;
 	Object* objectCollided(Object* actor, int x, int y);
 	int determineFirstMoveToExit(Object* p1, int x, int y);
+	int determineDirToExit(Object* p1, int x, int y);
 
 private:
 	void setDisplayText();

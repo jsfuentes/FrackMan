@@ -154,6 +154,7 @@ public:
 	void setTicksToNextMove() {};
 private:
 	bool m_Leaving;
+	bool m_firstMoveToLeave;
 	int m_StepsForward;
 	int m_MaxWaitingTime;
 	int m_CurrentWaitTime;

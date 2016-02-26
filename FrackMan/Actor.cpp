@@ -154,26 +154,29 @@ Agent::Agent(StudentWorld* world, int startX, int startY, Direction startDir,
 Protester::Protester(StudentWorld* world, int startX, int startY, int imageID, int hitPoints,
 	unsigned int score):Agent(world, startX, startY, left, imageID, hitPoints), m_StepsForward(randInt(8, 60)), 
 	m_Leaving(false), m_MaxWaitingTime(max(0, 3 - (static_cast<int>(getWorld()->getLevel())/4))), 
-	m_TimeSinceShout(15), m_TimeSincePerp(200)
+	m_TimeSinceShout(15), m_TimeSincePerp(200), m_firstMoveToLeave(true)
 {
 	m_CurrentWaitTime = m_MaxWaitingTime; //so immediately acts
-	getWorld()->determineFirstMoveToExit(this, getX(), getY());
 }
 
 void Protester::doSomething() 
 {
-	if (!isAlive() || getHP() < 0)
-	{
-		kill();
+	if (!isAlive())
 		return;
-	}
 	if (m_CurrentWaitTime >= m_MaxWaitingTime)
 	{
 		m_CurrentWaitTime = 0;
 		if (m_Leaving)
 		{
 			if (getX() == 60 && getY() == 60)
+			{
 				kill();
+				return;
+			}
+			else if (m_firstMoveToLeave)
+				setDirection(static_cast<Direction>(getWorld()->determineFirstMoveToExit(this, getX(), getY())));
+			else
+				setDirection(static_cast<Direction>(getWorld()->determineDirToExit(this, getX(), getY())));
 		}
 		else
 		{
@@ -252,16 +255,17 @@ void Protester::doSomething()
 						m_StepsForward = randInt(8, 60);
 					}
 				}
-				int x, y;
-				x = getX();
-				y = getY();
-				coordinatesIfMoved(getDirection(), x, y);
-				if (getWorld()->canActorMoveTo(this, x, y))
-					moveTo(x, y);
-				else
-					m_StepsForward = 0;
+				
 			}
 		}
+		int x, y;
+		x = getX();
+		y = getY();
+		coordinatesIfMoved(getDirection(), x, y);
+		if (getWorld()->canActorMoveTo(this, x, y))
+			moveTo(x, y);
+		else
+			m_StepsForward = 0;
 	}
 	else
 		m_CurrentWaitTime++;

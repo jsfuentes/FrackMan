@@ -12,6 +12,7 @@ public:
 	virtual void doSomething() = 0;
 	virtual void coordinatesIfMoved(Direction dir, int& x, int& y);
 	virtual void addGold() {};
+	virtual bool huntsFrackMan() const { return false; };
 	virtual bool canDigThroughDirt() const { return false; };
 	virtual bool canActorsPassThroughMe() const { return true; };
 	virtual bool canPickThingsUp() const { return false; };
@@ -175,7 +176,9 @@ class HardcoreProtester : public Protester
 {
 public:
 	HardcoreProtester(StudentWorld* world, int startX, int startY);
-	virtual bool TryToBeHardcore() { return true; };
+	virtual bool TryToBeHardcore();
 	virtual void addGold() {};
+private:
+	int m_MaxMovesAway;
 };
 #endif //Actor.h

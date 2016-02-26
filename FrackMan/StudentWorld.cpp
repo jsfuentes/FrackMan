@@ -191,7 +191,7 @@ int StudentWorld::move()
 		{
 			if ((*it)->needsToBePickedUpToFinishLevel())
 				m_BarrelsLeft--;
-			if ((*it)->canPickThingsUp()) //protesters are the only object in m_Actors that can pick things up 
+			if ((*it)->huntsFrackMan()) 
 				m_currentProtestors--;
 			delete (*it);
 			it = m_Actors.erase(it);

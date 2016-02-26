@@ -305,6 +305,11 @@ RegularProtester::RegularProtester(StudentWorld* world, int startX, int startY):
 HardcoreProtester::HardcoreProtester(StudentWorld* world, int startX, int startY) : Protester(
 	world, startX, startY, IID_HARD_CORE_PROTESTER, 20, 250) {}
 
+bool HardcoreProtester;; TryToBeHardcore()
+{ 
+	return true; 
+}
+
 FrackMan::FrackMan(StudentWorld* world, int startX, int startY) : Agent(world, startX, startY, right,
 	IID_PLAYER, 10), m_Gold(0), m_Sonar(1), m_Squirts(5) {}
 

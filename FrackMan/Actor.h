@@ -150,7 +150,6 @@ class RegularProtester : public Protester
 {
 public:
 	RegularProtester(StudentWorld* world, int startX, int startY);
-	virtual void doSomething() {};
 	virtual void addGold() {};
 };
 #endif //Actor.h

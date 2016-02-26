@@ -210,14 +210,30 @@ bool StudentWorld::facingTowardFrackMan(Object* a)
 	switch (dir)
 	{
 	case GraphObject::Direction::down:
-		for (int i = 0; canActorMoveTo(m_FrackMan, a->getX(), a->getY() - i); i++) //can Actor Move To checks if location within bounds
+		for (int i = 0; canActorMoveTo(a, a->getX(), a->getY() - i); i++) //can Actor Move To checks if location within bounds
 			if (distanceBetween(m_FrackMan, a->getX(), a->getY() - i) < 4)
 				return true;
 		return false;
 		break;
 	case GraphObject::Direction::up:
+		for (int i = 0; canActorMoveTo(a, a->getX(), a->getY() + i); i++) //can Actor Move To checks if location within bounds
+			if (distanceBetween(m_FrackMan, a->getX(), a->getY() + i) < 4)
+				return true;
+		return false;
+		break;
 	case GraphObject::Direction::right:
+		for (int i = 0; canActorMoveTo(a, a->getX() + i, a->getY()); i++) //can Actor Move To checks if location within bounds
+			if (distanceBetween(m_FrackMan, a->getX() + i, a->getY()) < 4)
+				return true;
+		return false;
+		break;
 	case GraphObject::Direction::left:
+		for (int i = 0; canActorMoveTo(a, a->getX() - i, a->getY()); i++) //can Actor Move To checks if location within bounds
+			if (distanceBetween(m_FrackMan, a->getX() - i, a->getY()) < 4)
+				return true;
+		return false;
+		break;
+	default:
 		break;
 	}
 }

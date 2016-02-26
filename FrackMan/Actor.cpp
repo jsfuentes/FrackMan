@@ -137,10 +137,12 @@ void Protester::doSomething()
 	if (m_CurrentWaitTime >= m_MaxWaitingTime)
 	{
 		Object* MrFrack = getWorld()->findNearbyFrackMan(this, 3);
-		if (MrFrack != nullptr)
+		if (MrFrack != nullptr && getWorld()->facingTowardFrackMan(this))
 		{
-
+			cout << "KLJLKSDJFL";
 		}
+		else if (getWorld()->facingTowardFrackMan(this))
+			cout << "GET HIM";
 	}
 	else
 		m_CurrentWaitTime++;

@@ -101,10 +101,10 @@ public:
 		int imageID, unsigned int hitPoints);
 	virtual ~Agent() {};
 	virtual bool annoy(int amount) { m_HP -= amount;  return true; };
-	unsigned int getHP() const { return m_HP; };
+	int getHP() const { return m_HP; };
 	virtual void addGold() = 0;
 private:
-	unsigned int m_HP;
+	int m_HP;
 };
 
 class FrackMan :public Agent

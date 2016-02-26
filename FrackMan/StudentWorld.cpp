@@ -204,6 +204,21 @@ void StudentWorld::cleanUp()
 ///////////////////////////////////
 /////HELPER FUNCTIONS
 //////////////////////////////////
+int StudentWorld::annoyAllNearbyAgents(Object* annoyer, int points, int radius)
+{
+	int counter = 0;
+	if (annoyer != m_FrackMan)
+		if (distanceBetween(m_FrackMan, annoyer->getX(), annoyer->getY()) < radius)
+			m_FrackMan->annoy(points);
+	for (vector<Object*>::iterator it = m_Actors.begin(); it != m_Actors.end(); it++)
+	{
+		if (*it != annoyer && distanceBetween(*it, annoyer->getX(), annoyer->getY()) < radius)
+			if ((*it)->annoy(points))
+				counter++;
+	}
+	return counter;
+}
+
 bool StudentWorld::facingTowardFrackMan(Object* a)
 {
 	GraphObject::Direction dir = a->getDirection();
@@ -288,13 +303,12 @@ bool StudentWorld::canActorMoveTo(Object* a, int x, int y)
 			return false;
 	else
 	{
-		bool canMove = true;
 		Object* intersectingA = objectCollided(a, x, y);
-		if (intersectingA != nullptr)
-			canMove = intersectingA->canActorsPassThroughMe();
-		if (!a->canDigThroughDirt())
-			canMove = !isDirtAround(x, y);
-		return canMove;
+		if (intersectingA != nullptr && !intersectingA->canActorsPassThroughMe())
+			return false;
+		if (!a->canDigThroughDirt() && isDirtAround(x, y))
+			return false;
+		return true;
 	}
 }
 
@@ -332,6 +346,20 @@ double StudentWorld::distanceBetween(Object* a1, int x, int y) const
 	int dY = y - a1->getY();
 	return sqrt(pow(dX, 2) + pow(dY, 2));
 }
+
+Object* StudentWorld::objectCollided(Object* actor, int x, int y)//returns object if overlapping or null if not
+{
+	if (actor == nullptr)
+		return nullptr;
+	if (m_FrackMan != actor && distanceBetween(m_FrackMan, x, y) < 4)
+		return m_FrackMan;
+	for (vector<Object*>::iterator it = m_Actors.begin(); it != m_Actors.end(); it++)
+	{
+		if (*it != actor && distanceBetween(*it, x, y) < 4)
+				return *it;
+	}
+	return nullptr;
+}
 ///////////////////////////
 //PRIVATE OR UTILITY FUNCTIONS
 //////////////////////////
@@ -354,19 +382,7 @@ void StudentWorld::setDisplayText()
 	setGameStatText(s); // calls our provided GameWorld::setGameStatText
 }
 
-Object* StudentWorld::objectCollided(Object* actor, int x, int y)//returns object if overlapping or null if not
-{
-	if (actor == nullptr)
-		return nullptr;
-	if (m_FrackMan != actor && distanceBetween(m_FrackMan, x, y) < 4)
-		return m_FrackMan;
-	for (vector<Object*>::iterator it = m_Actors.begin(); it != m_Actors.end(); it++)
-	{
-		if (*it != actor && distanceBetween(*it, x, y) < 4)
-				return *it;
-	}
-	return nullptr;
-}
+
 
 bool StudentWorld::closeToObjects(int x, int y)
 {

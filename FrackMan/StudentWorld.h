@@ -22,6 +22,7 @@ public:
 	virtual int init();
 	virtual int move();
 	virtual void cleanUp();
+	int annoyAllNearbyAgents(Object* annoyer, int points, int radius);
 	void giveFrackMan(ObjectName objectName);
 	void revealAllNearbyObjects(int x, int y, int radius);
 	Object* findNearbyFrackMan(Object* a, int radius) const; //In man is within radius, return him if not null 
@@ -32,10 +33,10 @@ public:
 	bool isDirtAround(int x, int y); //different from dirt at as it checks the 4x4 square using x,y as bottom left
 	void clearDirt(int x, int y, bool sound); //given the actors coordinates delete all dirt in 4x4
 	double distanceBetween(Object* a1, int x, int y) const;
+	Object* objectCollided(Object* actor, int x, int y);
 
 private:
 	void setDisplayText();
-	Object* objectCollided(Object* actor, int x, int y);
 	bool withinMineShaft(int x, int y);
 	bool closeToObjects(int x, int y);
 	Dirt* m_Dirt[64][64];

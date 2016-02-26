@@ -105,6 +105,7 @@ void Boulder::doSomething()
 				moveTo(getX(), getY() - 1);
 			else
 				kill();
+			getWorld()->annoyAllNearbyAgents(this, 100, 3);
 		}
 	}
 }
@@ -135,6 +136,8 @@ Protester::Protester(StudentWorld* world, int startX, int startY, int imageID, u
 
 void Protester::doSomething() 
 {
+	if (!isAlive())
+		return;
 	if (m_CurrentWaitTime >= m_MaxWaitingTime)
 	{
 		m_CurrentWaitTime = 0;

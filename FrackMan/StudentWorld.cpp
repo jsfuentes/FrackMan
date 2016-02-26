@@ -40,9 +40,6 @@ StudentWorld::~StudentWorld()
 
 int StudentWorld::init()
 {
-	for (int i = 0; i < 64; i++)
-		for (int j = 0; j < 64; j++)
-			m_DistanceToExit[i][j] = -1; // fill maze solving with -1 to indicate unsolved
 	int currentLevel = static_cast<int>(getLevel());
 	int B = min((currentLevel / 2) + 2, 6); //getLevel() returns unsigned int(could produce error for a HUGE level
 	int G = max(5 - (currentLevel) / 2, 2);
@@ -87,7 +84,7 @@ void StudentWorld::addActor(ObjectName objectName, int number)
 			m_Actors.push_back(regPro);
 		}
 		else if (objectName == Squirt_)
-		{
+		{ //TODO LET HIT WALL AND DISAPPEAR
 			Object* squirty = new Squirt(this, m_FrackMan->getX(), m_FrackMan->getY(), m_FrackMan->getDirection());
 			m_Actors.push_back(squirty);
 		}
@@ -220,6 +217,9 @@ void StudentWorld::cleanUp()
 //////////////////////////////////
 int StudentWorld::determineFirstMoveToExit(Object* p1, int x, int y)
 {
+	for (int i = 0; i < 64; i++)
+		for (int j = 0; j < 64; j++)
+			m_DistanceToExit[i][j] = -1; // fill maze solving with -1 to indicate unsolved
 	struct Coord
 	{
 		Coord(int x, int y) {
@@ -231,21 +231,21 @@ int StudentWorld::determineFirstMoveToExit(Object* p1, int x, int y)
 	};
 	queue<Coord> qC;
 	Coord c(60, 60);
+	m_DistanceToExit[60][60] = 0;
 	qC.push(c);
 	int stepsToExit = 0;
 	int nextRound = 0;
-	int currentRound = 0;
+	int currentRound = 1;
 	bool newRound = true;
 	while (!qC.empty())
 	{
-		if (currentRound == 0)
+		if (--currentRound == 0)
 		{
 			currentRound = nextRound;
 			nextRound = 0;
 			stepsToExit++;
+			newRound = true;
 		}
-		else
-			currentRound--;
 		Coord currentC = qC.front();
 		qC.pop();
 		for (int dir = GraphObject::Direction::right; dir > 0; dir--)
@@ -253,7 +253,7 @@ int StudentWorld::determineFirstMoveToExit(Object* p1, int x, int y)
 			int currentX = currentC.m_x;
 			int currentY = currentC.m_y;
 			m_FrackMan->coordinatesIfMoved(static_cast<GraphObject::Direction>(dir), currentX, currentY);
-			if (canActorMoveTo(p1, currentX, currentY) && m_DistanceToExit[currentX][currentY] == -1)
+			if (canActorMoveTo(p1, currentX, currentY) && (m_DistanceToExit[currentX][currentY] == -1))
 			{
 				if (newRound)
 					currentRound++;
@@ -272,16 +272,20 @@ int StudentWorld::determineFirstMoveToExit(Object* p1, int x, int y)
 			cout << m_DistanceToExit[i][j] << " ";
 		cout << endl;
 	}
-	/*int lowestDistance = m_DistanceToExit
+	int lowestDistance = m_DistanceToExit[x][y];
+	int bestDir = 0;
 	for (int dir = GraphObject::Direction::right; dir > 0; dir--)
 	{
 		int tempX = x;
 		int tempY = y;
 		m_FrackMan->coordinatesIfMoved(static_cast<GraphObject::Direction>(dir), tempX, tempY);
-		if (m_DistanceToExit[tempX, tempY])
+		if (m_DistanceToExit[tempX][tempY] <= lowestDistance)
+		{
+			lowestDistance = m_DistanceToExit[tempX][tempY];
+			bestDir = dir;
+		}
 	}
-	*/
-	return GraphObject::Direction::down;
+	return bestDir;
 }
 
 int StudentWorld::annoyAllNearbyAgents(Object* annoyer, int points, int radius)

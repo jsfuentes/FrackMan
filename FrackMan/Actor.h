@@ -144,6 +144,7 @@ public:
 	Protester(StudentWorld* world, int startX, int startY, int imageID,
 		int hitPoints, unsigned int score);
 	virtual ~Protester() {};
+	virtual bool annoy(int amount);
 	virtual void doSomething();
 	virtual void addGold();
 	virtual bool huntsFrackMan() const { return true; };

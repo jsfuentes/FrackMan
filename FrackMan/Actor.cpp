@@ -258,9 +258,32 @@ void Protester::doSomething()
 		m_CurrentWaitTime++;
 }
 
+bool Protester::annoy(int amount)
+{
+	if (!m_Leaving)
+	{
+		Agent::annoy(amount);
+		if (getHP() <= 0)
+		{
+			m_Leaving = true;
+			getWorld()->playSound(SOUND_PROTESTER_GIVE_UP);
+			m_CurrentWaitTime = 3; //not 0 but it will act on the next tick for sure
+			if (amount != 100)//not boulder which does its own increase score
+				getWorld()->increaseScore(100);
+		}
+		else
+		{
+			getWorld()->playSound(SOUND_PROTESTER_ANNOYED);
+			m_CurrentWaitTime = m_MaxWaitingTime - max(50, 100 - (static_cast<int>(getWorld()->getLevel()) * 10));
+		}
+	}
+	else
+		return false;
+}
+
 void Protester::addGold()
 {
-	
+	m_Leaving = true;
 }
 
 RegularProtester::RegularProtester(StudentWorld* world, int startX, int startY): Protester(

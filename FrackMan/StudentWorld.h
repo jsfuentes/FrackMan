@@ -23,7 +23,7 @@ public:
 	virtual int init();
 	virtual int move();
 	virtual void cleanUp();
-	int annoyAllNearbyAgents(Object* annoyer, int points, int radius);
+	int annoyAllNearbyAgents(Object* annoyer, int points, int radius, bool frackerIsImmune = true);
 	void give(ObjectName objectName, Object* reciever = nullptr);
 	void revealAllNearbyObjects(int x, int y, int radius);
 	Object* findNearbyFrackMan(Object* a, int radius) const; //In man is within radius, return him if not null 

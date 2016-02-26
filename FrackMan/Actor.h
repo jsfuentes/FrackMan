@@ -124,7 +124,8 @@ public:
 	FrackMan(StudentWorld* world, int startX, int startY); //default deconstructor is adequete but
 	~FrackMan() {};
 	void doSomething();
-	bool canDigThroughDirt() const{ return true; };
+	bool canDigThroughDirt() const{ return true; }
+	virtual bool annoy(int amount);
 	virtual void addGold() { m_Gold++; };
 	void addSonar() { m_Sonar++; };
 	void addWater() { m_Squirts+=5; };
@@ -167,6 +168,5 @@ class RegularProtester : public Protester
 {
 public:
 	RegularProtester(StudentWorld* world, int startX, int startY);
-	virtual void addGold() {};
 };
 #endif //Actor.h

@@ -84,9 +84,16 @@ void StudentWorld::addActor(ObjectName objectName, int number)
 			m_Actors.push_back(regPro);
 		}
 		else if (objectName == Squirt_)
-		{ //TODO LET HIT WALL AND DISAPPEAR
-			Object* squirty = new Squirt(this, m_FrackMan->getX(), m_FrackMan->getY(), m_FrackMan->getDirection());
-			m_Actors.push_back(squirty);
+		{ 
+			x = m_FrackMan->getX();
+			y = m_FrackMan->getY();
+			for (int i = 0; i < 4; i++)
+			m_FrackMan->coordinatesIfMoved(m_FrackMan->getDirection(), x, y);
+			Object* squirty = new Squirt(this, x, y, m_FrackMan->getDirection());
+			if (canActorMoveTo(squirty, x, y))
+				m_Actors.push_back(squirty);
+			else
+				delete squirty;
 		}
 		else if (objectName == DroppedGold_)
 		{
@@ -293,10 +300,10 @@ int StudentWorld::determineDirToExit(Object* p1, int x, int y)
 	return bestDir;
 }
 
-int StudentWorld::annoyAllNearbyAgents(Object* annoyer, int points, int radius)
+int StudentWorld::annoyAllNearbyAgents(Object* annoyer, int points, int radius, bool frackerIsImmune)
 {
 	int counter = 0;
-	if (annoyer != m_FrackMan)
+	if (!frackerIsImmune && annoyer != m_FrackMan)
 		if (distanceBetween(m_FrackMan, annoyer->getX(), annoyer->getY()) < radius)
 			m_FrackMan->annoy(points);
 	for (vector<Object*>::iterator it = m_Actors.begin(); it != m_Actors.end(); it++)

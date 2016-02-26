@@ -70,7 +70,11 @@ void SonarKit::activate()
 
 GoldNugget::GoldNugget(StudentWorld* world, int startX, int startY, bool temporary):ActivatingObject(
 	world, startX, startY, IID_GOLD, temporary? SOUND_PROTESTER_FOUND_GOLD: SOUND_GOT_GOODIE, 
-	!temporary, temporary, temporary, temporary ? 25 : 10) {}
+	!temporary, temporary, temporary, temporary ? 25 : 10) 
+{
+	if (temporary)
+		setTicksToLive(100);
+}
 
 void GoldNugget::activate() 
 {
@@ -89,12 +93,8 @@ Squirt::Squirt(StudentWorld* world, int startX, int startY, Direction startDir) 
 
 void Squirt::doSomething() 
 {
-	Object* nearbyPro = getWorld()->findNearbyProtestor(this, 3);
-	if (nearbyPro != nullptr)
-	{
-		nearbyPro->annoy(2);
+	if (getWorld()->annoyAllNearbyAgents(this, 2, 3) != 0)
 		kill();
-	}
 	else if (m_distanceToTravel-- <= 0)
 		kill();
 	else
@@ -382,7 +382,14 @@ void FrackMan::doSomething()
 			break;
 		}
 	}
-} // Students:  Add code to this file (if you wish), Actor.h, StudentWorld.h, and StudentWorld.cpp
+} 
+bool FrackMan::annoy(int amount)
+{
+	if (amount != 100 && getHP() <= 0)
+		getWorld()->playSound(SOUND_PLAYER_GIVE_UP);
+	return Agent::annoy(amount);
+}
+// Students:  Add code to this file (if you wish), Actor.h, StudentWorld.h, and StudentWorld.cpp
 
 void Object::coordinatesIfMoved(Direction dir, int& x, int& y)
 {

@@ -9,6 +9,7 @@
 class Dirt;
 class Object;
 class FrackMan;
+class Agent;
 
 int randInt(int min, int max); //at bottom of StudentWorld
 // Students:  Add code to this file, StudentWorld.cpp, Actor.h, and Actor.cpp
@@ -23,7 +24,7 @@ public:
 	virtual int move();
 	virtual void cleanUp();
 	int annoyAllNearbyAgents(Object* annoyer, int points, int radius);
-	void giveFrackMan(ObjectName objectName);
+	void give(ObjectName objectName, Object* reciever = nullptr);
 	void revealAllNearbyObjects(int x, int y, int radius);
 	Object* findNearbyFrackMan(Object* a, int radius) const; //In man is within radius, return him if not null 
 	Object* findNearbyProtestor(Object* a, int radius);

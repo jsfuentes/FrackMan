@@ -34,22 +34,23 @@ void ActivatingObject::doSomething()
 {
 	if (!isAlive())
 		return;
+	bool activated = false;
 	if (m_actOnPlayer)
-	{
-		Object* MrFrack = getWorld()->findNearbyFrackMan(this, 3);
-		if (MrFrack != nullptr)
-		{
-			activate();
-			getWorld()->increaseScore(m_ptsWhenAct);
-			playSound();
-			kill();
-		}
-	}
+		if (getWorld()->findNearbyFrackMan(this, 3) != nullptr)
+			activated = true;
 	if (m_temporary) //m_temporary ensures m_ticksLeft intialized
 	{
 		if(m_ticksLeft-- == 0)
 			kill();
-
+		if (m_actOnProtestor && getWorld()->findNearbyProtestor(this, 3) != nullptr)
+			activated = true;
+	}
+	if (activated)
+	{
+		activate();
+		getWorld()->increaseScore(m_ptsWhenAct);
+		playSound();
+		kill();
 	}
 }
 
@@ -58,7 +59,7 @@ WaterPool::WaterPool(StudentWorld* world, int startX, int startY):ActivatingObje
 
 void WaterPool::activate()
 {
-	getWorld()->giveFrackMan(StudentWorld::ObjectName::Water_);
+	getWorld()->give(StudentWorld::ObjectName::Water_);
 }
 
 SonarKit::SonarKit(StudentWorld* world, int startX, int startY): ActivatingObject(world, startX, 
@@ -66,7 +67,7 @@ SonarKit::SonarKit(StudentWorld* world, int startX, int startY): ActivatingObjec
 
 void SonarKit::activate()
 {
-	getWorld()->giveFrackMan(StudentWorld::ObjectName::Sonar_);
+	getWorld()->give(StudentWorld::ObjectName::Sonar_);
 }
 
 GoldNugget::GoldNugget(StudentWorld* world, int startX, int startY, bool temporary):ActivatingObject(
@@ -76,11 +77,9 @@ GoldNugget::GoldNugget(StudentWorld* world, int startX, int startY, bool tempora
 void GoldNugget::activate() 
 {
 	if (activatesOnPlayer())
-		getWorld()->giveFrackMan(StudentWorld::ObjectName::Gold_);
+		getWorld()->give(StudentWorld::ObjectName::Gold_);
 	else
-	{
-
-	}
+		getWorld()->give(StudentWorld::ObjectName::DroppedGold_, getWorld()->findNearbyProtestor(this, 3));
 }
 
 OilBarrel::OilBarrel(StudentWorld* world, int startX, int startY) : ActivatingObject(world,
@@ -232,6 +231,11 @@ void Protester::doSomething()
 	}
 	else
 		m_CurrentWaitTime++;
+}
+
+void Protester::addGold()
+{
+	
 }
 
 RegularProtester::RegularProtester(StudentWorld* world, int startX, int startY): Protester(

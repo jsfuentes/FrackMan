@@ -11,6 +11,7 @@ public:
 	virtual ~Object() {};
 	virtual void doSomething() = 0;
 	virtual void coordinatesIfMoved(Direction dir, int& x, int& y);
+	virtual void addGold() {};
 	virtual bool canDigThroughDirt() const { return false; };
 	virtual bool canActorsPassThroughMe() const { return true; };
 	virtual bool canPickThingsUp() const { return false; };
@@ -104,7 +105,6 @@ public:
 	virtual bool canPickThingsUp() const { return true; };
 	virtual bool annoy(int amount) { m_HP -= amount;  return true; };
 	int getHP() const { return m_HP; };
-	virtual void addGold() = 0;
 private:
 	int m_HP;
 };
@@ -136,7 +136,7 @@ public:
 		int hitPoints, unsigned int score);
 	virtual ~Protester() {};
 	virtual void doSomething();
-	virtual void addGold() {};
+	virtual void addGold();
 	virtual bool huntsFrackMan() const { return true; };
 	// Set state to having given up protest
 	void setMustLeaveOilField() { m_Leaving = true; };

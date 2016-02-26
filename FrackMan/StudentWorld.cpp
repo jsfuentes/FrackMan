@@ -259,7 +259,7 @@ bool StudentWorld::facingTowardFrackMan(Object* a)
 	}
 }
 
-void StudentWorld::giveFrackMan(ObjectName objectName)
+void StudentWorld::give(ObjectName objectName, Object* reciever)
 {
 	if (objectName == Gold_)
 		m_FrackMan->addGold();
@@ -267,6 +267,8 @@ void StudentWorld::giveFrackMan(ObjectName objectName)
 		m_FrackMan->addSonar();
 	else if (objectName == Water_)
 		m_FrackMan->addWater();
+	else if (objectName == DroppedGold_ && reciever != nullptr)
+		reciever->addGold();
 }
 
 void StudentWorld::revealAllNearbyObjects(int x, int y, int radius)
@@ -329,6 +331,7 @@ Object* StudentWorld::findNearbyProtestor(Object* a, int radius)
 		if ((*it)->canPickThingsUp() && distanceBetween(*it, a->getX(), a->getY()) < radius)
 			return *it;
 	}
+	return nullptr;
 }
 
 bool StudentWorld::isDirtAt(int x, int y)

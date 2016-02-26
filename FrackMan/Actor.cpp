@@ -255,7 +255,6 @@ void Protester::doSomething()
 						m_StepsForward = randInt(8, 60);
 					}
 				}
-				
 			}
 		}
 		int x, y;

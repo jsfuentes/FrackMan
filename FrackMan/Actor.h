@@ -148,6 +148,7 @@ public:
 	virtual void doSomething();
 	virtual void addGold();
 	virtual bool huntsFrackMan() const { return true; };
+	virtual bool canPickThingsUp() const { return !m_Leaving; }
 	// Set state to having given up protest
 	void setMustLeaveOilField() { m_Leaving = true; };
 	// Set number of ticks until next move

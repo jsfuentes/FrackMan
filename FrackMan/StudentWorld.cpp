@@ -412,7 +412,7 @@ Object* StudentWorld::findNearbyProtestor(Object* a, int radius)
 {
 	for (vector<Object*>::iterator it = m_Actors.begin(); it != m_Actors.end(); it++)
 	{
-		if ((*it)->canPickThingsUp() && distanceBetween(*it, a->getX(), a->getY()) < radius)
+		if ((*it)->canPickThingsUp() && distanceBetween(*it, a->getX(), a->getY()) < radius) //leaving protestors can pick things up
 			return *it; //returns first protestor it finds, so only he gets the gold
 	}
 	return nullptr;

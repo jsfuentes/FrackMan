@@ -10,6 +10,7 @@ public:
 	Object(StudentWorld* world, int imageID, int startX, int startY, Direction dir, double size, unsigned int depth);
 	virtual ~Object() {};
 	virtual void doSomething() = 0;
+	virtual void coordinatesIfMoved(Direction dir, int& x, int& y);
 	virtual bool canDigThroughDirt() const { return false; };
 	virtual bool canActorsPassThroughMe() const { return true; };
 	virtual bool needsToBePickedUpToFinishLevel() const { return false; };

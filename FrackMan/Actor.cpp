@@ -136,7 +136,8 @@ void Protester::doSomething()
 {
 	if (m_CurrentWaitTime >= m_MaxWaitingTime)
 	{
-		Object* MrFrack = getWorld()->findNearbyFrackMan(this, 3);
+		m_CurrentWaitTime = 0;
+		Object* MrFrack = getWorld()->findNearbyFrackMan(this, 4);
 		if (MrFrack != nullptr && getWorld()->facingTowardFrackMan(this) && m_TimeSinceShout++ >= 15) //increments timesince shout here
 		{
 			getWorld()->playSound(SOUND_PROTESTER_YELL);
@@ -144,8 +145,79 @@ void Protester::doSomething()
 			m_TimeSinceShout = 0;
 			return;
 		}
-		else if (getWorld()->facingTowardFrackMan(this))
-			cout << "GET HIM";
+		else if (MrFrack == nullptr)
+		{	
+			Direction baseDir = getDirection();
+			Direction toFrack = none;
+			for (int dir = right; dir > 0; dir--)
+			{
+				setDirection(static_cast<Direction>(dir));
+				if (getWorld()->facingTowardFrackMan(this))
+				{
+					toFrack = static_cast<Direction>(dir);
+					break; //will be facing correct Direction
+				}
+				setDirection(baseDir);
+			}
+			if (toFrack != none)
+			{
+
+				m_StepsForward = 0;
+			}
+			else if(--m_StepsForward <= 0)
+			{
+				int x, y;
+				do
+				{
+					Direction randDir = static_cast<Direction>(randInt(1, 4));
+					setDirection(randDir);
+					x = getX();
+					y = getY();
+					coordinatesIfMoved(randDir, x, y);
+				} while (!getWorld()->canActorMoveTo(this, x, y));
+				m_StepsForward = randInt(8, 60);
+			}
+			else if(m_TimeSincePerp++ >= 200 )
+			{
+				int x, y;
+				Direction initialDir = getDirection();
+				x = getX();
+				y = getY();
+				coordinatesIfMoved(initialDir, x, y); //if it changes x, only care about the y's and viceversa
+				if (x != getX())
+				{
+					bool canGoUp = getWorld()->canActorMoveTo(this, getX(), getY() + 1);
+					bool canGoDown = getWorld()->canActorMoveTo(this, getX(), getY() - 1);
+					if (canGoUp && canGoDown)
+						setDirection(randInt(1, 2) == 1 ? up : down);
+					else if (canGoUp)
+						setDirection(up);
+					else if (canGoDown)
+						setDirection(down);
+				}
+				else if (y != getY())
+				{
+					bool canGoLeft = getWorld()->canActorMoveTo(this, getX() -1, getY());
+					bool canGoRight = getWorld()->canActorMoveTo(this, getX() + 1, getY());
+					if (canGoLeft && canGoRight)
+						setDirection(randInt(1, 2) == 1 ? left : right);
+					else if (canGoLeft)
+						setDirection(left);
+					else if (canGoRight)
+						setDirection(right);
+				}
+				if (initialDir != getDirection())
+				{
+					m_TimeSincePerp = 0;
+					m_StepsForward = randInt(8, 60);
+				}
+			}
+			int x, y;
+			x = getX();
+			y = getY();
+			coordinatesIfMoved(getDirection(), x, y);
+			moveTo(x, y);
+		}
 	}
 	else
 		m_CurrentWaitTime++;
@@ -230,7 +302,26 @@ void FrackMan::doSomething()
 		default:
 			break;
 		}
-
 	}
-
 } // Students:  Add code to this file (if you wish), Actor.h, StudentWorld.h, and StudentWorld.cpp
+
+void Object::coordinatesIfMoved(Direction dir, int& x, int& y)
+{
+	switch (dir)
+	{
+	case up:
+		y += 1;
+		break;
+	case down:
+		y -= 1;
+		break;
+	case left:
+		x -= 1;
+		break;
+	case right:
+		 x +=1;
+		break;
+	default:
+		break;
+	}
+}

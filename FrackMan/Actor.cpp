@@ -127,7 +127,7 @@ Agent::Agent(StudentWorld* world, int startX, int startY, Direction startDir,
 
 Protester::Protester(StudentWorld* world, int startX, int startY, int imageID, unsigned int hitPoints,
 	unsigned int score):Agent(world, startX, startY, left, imageID, hitPoints), m_StepsForward(randInt(8, 60)), 
-	m_Leaving(false), m_MaxWaitingTime(max(0, 3 - (static_cast<int>(getWorld()->getLevel())/4)))
+	m_Leaving(false), m_MaxWaitingTime(max(0, 3 - (static_cast<int>(getWorld()->getLevel())/4))), m_TimeSinceShout(15)
 {
 	m_CurrentWaitTime = m_MaxWaitingTime; //so immediately acts
 }
@@ -137,9 +137,12 @@ void Protester::doSomething()
 	if (m_CurrentWaitTime >= m_MaxWaitingTime)
 	{
 		Object* MrFrack = getWorld()->findNearbyFrackMan(this, 3);
-		if (MrFrack != nullptr && getWorld()->facingTowardFrackMan(this))
+		if (MrFrack != nullptr && getWorld()->facingTowardFrackMan(this) && m_TimeSinceShout++ >= 15) //increments timesince shout here
 		{
-			cout << "KLJLKSDJFL";
+			getWorld()->playSound(SOUND_PROTESTER_YELL);
+			MrFrack->annoy(2);
+			m_TimeSinceShout = 0;
+			return;
 		}
 		else if (getWorld()->facingTowardFrackMan(this))
 			cout << "GET HIM";
@@ -158,8 +161,11 @@ FrackMan::FrackMan(StudentWorld* world, int startX, int startY) : Agent(world, s
 
 void FrackMan::doSomething()
 {
-	if (!isAlive())
+	if (!isAlive() || getHP() <= 0)
+	{
+		kill();
 		return;
+	}
 	int ch;
 	if (getWorld()->getKey(ch) == true)
 	{

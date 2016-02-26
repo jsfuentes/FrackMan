@@ -13,6 +13,7 @@ public:
 	virtual bool canDigThroughDirt() const { return false; };
 	virtual bool canActorsPassThroughMe() const { return true; };
 	virtual bool needsToBePickedUpToFinishLevel() const { return false; };
+	virtual bool annoy(int amount) { return false; };
 	StudentWorld* getWorld() { return m_world; };
 	bool isAlive() { return m_isAlive; };
 	void kill() { m_isAlive = false; };
@@ -98,6 +99,7 @@ public:
 	Agent(StudentWorld* world, int startX, int startY, Direction startDir,
 		int imageID, unsigned int hitPoints);
 	virtual ~Agent() {};
+	virtual bool annoy(int amount) { m_HP -= amount;  return true; };
 	unsigned int getHP() const { return m_HP; };
 	virtual void addGold() = 0;
 private:
@@ -131,7 +133,7 @@ public:
 		unsigned int hitPoints, unsigned int score);
 	virtual ~Protester() {};
 	virtual void doSomething();
-	virtual bool annoy(unsigned int amount) { return false; };
+	virtual bool annoy(int amount) { return false; };
 	virtual void addGold() {};
 	virtual bool huntsFrackMan() const { return true; };
 	// Set state to having given up protest
@@ -144,6 +146,7 @@ private:
 	int m_MaxWaitingTime;
 	int m_CurrentWaitTime;
 	int m_TimeSincePerp;
+	int m_TimeSinceShout;
 };
 
 class RegularProtester : public Protester

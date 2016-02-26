@@ -152,16 +152,16 @@ int StudentWorld::move()
 		else
 			addActor(Water_);
 	}
-	clearDirt(m_FrackMan->getX(), m_FrackMan->getY(), true);
-	m_FrackMan->doSomething(); //action
-	revealAllNearbyObjects(m_FrackMan->getX(), m_FrackMan->getY(), 4);
-	vector<Object*>::iterator it = m_Actors.begin();
+	vector<Object*>::iterator it = m_Actors.begin();//action
 	for (; it != m_Actors.end(); it++)
 	{
 		(*it)->doSomething();
 		if (!m_FrackMan->isAlive())
 			return GWSTATUS_PLAYER_DIED; 
 	}
+	clearDirt(m_FrackMan->getX(), m_FrackMan->getY(), true);
+	m_FrackMan->doSomething(); 
+	revealAllNearbyObjects(m_FrackMan->getX(), m_FrackMan->getY(), 4);
 	it = m_Actors.begin(); //deletion
 	while(it != m_Actors.end()) 
 	{
@@ -234,6 +234,7 @@ bool StudentWorld::facingTowardFrackMan(Object* a)
 		return false;
 		break;
 	default:
+		return false;
 		break;
 	}
 }

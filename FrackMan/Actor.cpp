@@ -126,7 +126,7 @@ Agent::Agent(StudentWorld* world, int startX, int startY, Direction startDir,
 	int imageID, unsigned int hitPoints) : Object(world, imageID, startX, startY, startDir, 1.0, 0)
 	, m_HP(hitPoints) {}
 
-Protester::Protester(StudentWorld* world, int startX, int startY, int imageID, unsigned int hitPoints,
+Protester::Protester(StudentWorld* world, int startX, int startY, int imageID, int hitPoints,
 	unsigned int score):Agent(world, startX, startY, left, imageID, hitPoints), m_StepsForward(randInt(8, 60)), 
 	m_Leaving(false), m_MaxWaitingTime(max(0, 3 - (static_cast<int>(getWorld()->getLevel())/4))), 
 	m_TimeSinceShout(15), m_TimeSincePerp(200)
@@ -136,8 +136,11 @@ Protester::Protester(StudentWorld* world, int startX, int startY, int imageID, u
 
 void Protester::doSomething() 
 {
-	if (!isAlive())
+	if (!isAlive() || getHP() < 0)
+	{
+		kill();
 		return;
+	}
 	if (m_CurrentWaitTime >= m_MaxWaitingTime)
 	{
 		m_CurrentWaitTime = 0;

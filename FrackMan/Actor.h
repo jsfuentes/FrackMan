@@ -131,10 +131,9 @@ class Protester : public Agent
 {
 public:
 	Protester(StudentWorld* world, int startX, int startY, int imageID,
-		unsigned int hitPoints, unsigned int score);
+		int hitPoints, unsigned int score);
 	virtual ~Protester() {};
 	virtual void doSomething();
-	virtual bool annoy(int amount) { return false; };
 	virtual void addGold() {};
 	virtual bool huntsFrackMan() const { return true; };
 	// Set state to having given up protest

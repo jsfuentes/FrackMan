@@ -127,7 +127,8 @@ Agent::Agent(StudentWorld* world, int startX, int startY, Direction startDir,
 
 Protester::Protester(StudentWorld* world, int startX, int startY, int imageID, unsigned int hitPoints,
 	unsigned int score):Agent(world, startX, startY, left, imageID, hitPoints), m_StepsForward(randInt(8, 60)), 
-	m_Leaving(false), m_MaxWaitingTime(max(0, 3 - (static_cast<int>(getWorld()->getLevel())/4))), m_TimeSinceShout(15)
+	m_Leaving(false), m_MaxWaitingTime(max(0, 3 - (static_cast<int>(getWorld()->getLevel())/4))), 
+	m_TimeSinceShout(15), m_TimeSincePerp(200)
 {
 	m_CurrentWaitTime = m_MaxWaitingTime; //so immediately acts
 }
@@ -216,7 +217,10 @@ void Protester::doSomething()
 			x = getX();
 			y = getY();
 			coordinatesIfMoved(getDirection(), x, y);
-			moveTo(x, y);
+			if (getWorld()->canActorMoveTo(this, x, y))
+				moveTo(x, y);
+			else
+				m_StepsForward = 0;
 		}
 	}
 	else

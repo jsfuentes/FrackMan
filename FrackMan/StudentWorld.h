@@ -36,11 +36,11 @@ public:
 	void clearDirt(int x, int y, bool sound); //given the actors coordinates delete all dirt in 4x4
 	double distanceBetween(Object* a1, int x, int y) const;
 	Object* objectCollided(Object* actor, int x, int y);
-	int determineFirstMoveTo(Object* p1, int x, int y, bool toFrackMan = false);
+	int determineFirstMoveTo(Object* p1, int x, int y, bool& toFrackMan, int maxMoves = -1);
 	int determineDirTo(int x, int y, bool toFrackMan = false);
 	
 private:
-	bool fillDistanceArrayTo(Object* p1, int x, int y, bool toFrackMan = false);
+	bool fillDistanceArrayTo(Object* p1, int x, int y, bool toFrackMan, int maxMoves = -1);
 	void setDisplayText();
 	bool withinMineShaft(int x, int y);
 	bool closeToObjects(int x, int y);

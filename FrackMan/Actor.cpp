@@ -109,8 +109,8 @@ void Squirt::doSomething()
 		else
 			kill();
 	}
-
 }
+
 Boulder::Boulder(StudentWorld* world, int startX, int startY): Object(world, IID_BOULDER, 
 	startX, startY, down, 1.0, 1), delayCounter(0), isStable(true) {}
 
@@ -168,13 +168,17 @@ void Protester::doSomething()
 		m_CurrentWaitTime = 0;
 		if (m_Leaving)
 		{
+			bool useless = false;
 			if (getX() == 60 && getY() == 60)
 			{
 				kill();
 				return;
 			}
 			else if (m_firstMoveToLeave)
-				setDirection(static_cast<Direction>(getWorld()->determineFirstMoveTo(this, getX(), getY())));
+			{	
+				setDirection(static_cast<Direction>(getWorld()->determineFirstMoveTo(this, getX(), getY(), useless)));
+				m_firstMoveToLeave = false;
+			}
 			else
 				setDirection(static_cast<Direction>(getWorld()->determineDirTo(getX(), getY())));
 		}
@@ -303,11 +307,25 @@ RegularProtester::RegularProtester(StudentWorld* world, int startX, int startY):
 	world, startX, startY, IID_PROTESTER, 5, 100) {}
 
 HardcoreProtester::HardcoreProtester(StudentWorld* world, int startX, int startY) : Protester(
-	world, startX, startY, IID_HARD_CORE_PROTESTER, 20, 250) {}
+	world, startX, startY, IID_HARD_CORE_PROTESTER, 20, 250), m_MaxMovesAway(16 + getWorld()->getLevel()*2) {}
 
-bool HardcoreProtester;; TryToBeHardcore()
+bool HardcoreProtester::tryToBeHardCore()
 { 
-	return true; 
+	bool toFrack = true;
+	int dir = getWorld()->determineFirstMoveTo(this, getX(), getY(), toFrack, m_MaxMovesAway);
+	if(toFrack)
+	{
+		setDirection(static_cast<Direction>(dir));
+		return true;
+	}
+	else
+		return false;
+}
+
+void HardcoreProtester::addGold()
+{
+	setTimetoWait(max(50, 100 - (static_cast<int>(getWorld()->getLevel())) * 10));
+	getWorld()->increaseScore(25); //already increase by 25 by base case
 }
 
 FrackMan::FrackMan(StudentWorld* world, int startX, int startY) : Agent(world, startX, startY, right,

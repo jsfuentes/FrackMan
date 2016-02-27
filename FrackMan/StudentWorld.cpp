@@ -160,7 +160,7 @@ int StudentWorld::move()
 		if (m_currentProtestors < m_MaxProtestors)
 		{
 			int probOfHardcore = min(90, (static_cast<int>(getLevel()) * 10) + 30);
-			if (randInt(1, 100) <= probOfHardcore)
+			if (randInt(1, 1) <= probOfHardcore)//change to 1 to 100DONT FORGET
 				addActor(HardcoreProtester_);
 			else
 				addActor(RegularProtester_);
@@ -228,10 +228,11 @@ void StudentWorld::cleanUp()
 ///////////////////////////////////
 /////HELPER FUNCTIONS
 //////////////////////////////////
-int StudentWorld::determineFirstMoveTo(Object* p1, int x, int y, bool toFrackMan)
+int StudentWorld::determineFirstMoveTo(Object* p1, int x, int y, bool& toFrackMan, int maxMoves)
 {
-	fillDistanceArrayTo(p1, x, y, toFrackMan);
-	return determineDirTo(x, y);
+	bool originalToFrack = toFrackMan;
+	toFrackMan = fillDistanceArrayTo(p1, x, y, toFrackMan, maxMoves);
+	return determineDirTo(x, y, originalToFrack);
 }
 
 int StudentWorld::determineDirTo(int x, int y, bool toFrackMan)
@@ -424,7 +425,7 @@ Object* StudentWorld::objectCollided(Object* actor, int x, int y)//returns objec
 ///////////////////////////
 //PRIVATE OR UTILITY FUNCTIONS
 //////////////////////////
-bool StudentWorld::fillDistanceArrayTo(Object* p1, int x, int y, bool toFrackMan)
+bool StudentWorld::fillDistanceArrayTo(Object* p1, int x, int y, bool toFrackMan, int maxMoves)
 {
 	int (*a1)[64] = (toFrackMan? m_DistanceToFrackMan: m_DistanceToExit); //decides array to change
 	for (int i = 0; i < 64; i++)
@@ -454,13 +455,6 @@ bool StudentWorld::fillDistanceArrayTo(Object* p1, int x, int y, bool toFrackMan
 	bool newRound = true;
 	while (!qC.empty())
 	{
-		if (--currentRound == 0)
-		{
-			currentRound = nextRound;
-			nextRound = 0;
-			stepsToExit++;
-			newRound = true;
-		}
 		Coord currentC = qC.front();
 		qC.pop();
 		for (int dir = GraphObject::Direction::right; dir > 0; dir--)
@@ -476,15 +470,29 @@ bool StudentWorld::fillDistanceArrayTo(Object* p1, int x, int y, bool toFrackMan
 					nextRound++;
 				qC.push(Coord(currentX, currentY));
 				a1[currentX][currentY] = stepsToExit;
-				if (currentX == x && currentY == y)
-					return true;
 			}
 		}
 		if (newRound)
 			newRound = false;
+		if (--currentRound == 0)
+		{
+			currentRound = nextRound;
+			nextRound = 0;
+			stepsToExit++;
+			newRound = true;
+		}
 	}
-	return false;
-	
+	/*for (int i = 0; i < 64; i++)
+	{
+		for (int j = 0; j < 64; j++)
+			cout << a1[i][j];
+		cout << endl;
+	}
+	*/
+	if (a1[x][y] >= maxMoves && maxMoves != -1) 
+		return false;
+	else
+		return true;
 }
 
 void StudentWorld::setDisplayText()

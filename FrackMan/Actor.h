@@ -154,6 +154,7 @@ public:
 	virtual bool canPickThingsUp() const { return !m_Leaving; }
 	// Set state to having given up protest
 	void setMustLeaveOilField() { m_Leaving = true; };
+	void setTimetoWait(int time) { m_CurrentWaitTime = m_MaxWaitingTime - time; };
 	// Set number of ticks until next move
 private:
 	bool m_Leaving;
@@ -176,8 +177,8 @@ class HardcoreProtester : public Protester
 {
 public:
 	HardcoreProtester(StudentWorld* world, int startX, int startY);
-	virtual bool TryToBeHardcore();
-	virtual void addGold() {};
+	virtual bool tryToBeHardCore();
+	virtual void addGold();
 private:
 	int m_MaxMovesAway;
 };

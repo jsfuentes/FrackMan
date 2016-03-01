@@ -62,4 +62,5 @@ private:
 It was ambigious whether to have the guy kill himself immediately without any other actor doing anthign, but the two extra lines of code this needed seem unneccessary
 The math logic was slightly ambigious but i just used general precedence operations
 In the given game, the protester didnt always turn perpendicular right after it spawns when the specafications said if it was a t a perpendicular and turn and hadnt done a intential one in the last 200 ticks to turn
+It was unspecified but I copied what the program seemed to do and delete the dirt the tick after he moved there.
 */

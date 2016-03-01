@@ -160,14 +160,14 @@ int StudentWorld::move()
 		if (m_currentProtestors < m_MaxProtestors)
 		{
 			int probOfHardcore = min(90, (static_cast<int>(getLevel()) * 10) + 30);
-			if (randInt(1, 1) <= probOfHardcore)//change to 1 to 100DONT FORGET
+			if (randInt(1, 100) <= probOfHardcore)//change to 1 to 100 DONT FORGET
 				addActor(HardcoreProtester_);
 			else
 				addActor(RegularProtester_);
 			m_currentTimeSinceAdd = 0;
 			m_currentProtestors++;
 		}
-	if (randInt(1, 100) == 1)//insertion, DONT FORGET TO CHANGE THIS TO G
+	if (randInt(1, G) == 1)//insertion, DONT FORGET TO CHANGE THIS TO G
 	{
 		if (randInt(1, 5) == 1)
 			addActor(Sonar_);

@@ -53,7 +53,6 @@ public:
 	Dirt(StudentWorld* world, int startX, int startY); //default deconstructor works but 
 	~Dirt() {};
 	void doSomething() {};
-private:
 };
 
 class ActivatingObject : public Object
